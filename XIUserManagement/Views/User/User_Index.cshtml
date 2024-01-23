@@ -1,0 +1,25 @@
+﻿@model List<Interfleet.XIUserManagement.Models.Users>
+@{
+}
+<br />
+<h5>List of Users</h5>
+<a class='btn btn-primary btn-sm' href='/Home/Index'>Home</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.UserName</td>
+                <td>@item.Company</td>
+                <td>@item.Comments</td>
+            </tr>
+        }
+    </tbody>
+</table>

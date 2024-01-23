@@ -1,0 +1,102 @@
+﻿@model Interfleet.XIUserManagement.Models.LoginViewModel;
+@{
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XI User Management Login </title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: lightcyan;
+            font-family: 'Arial';
+        }
+
+        .login {
+            width: 500px;
+            overflow: hidden;
+            margin: auto;
+            margin: 20 0 0 450px;
+            padding: 80px;
+            background: #6abadeba;
+            border-radius: 15px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #277582;
+            padding: 20px;
+        }
+
+        label {
+            /* color: dodgerblue; */
+            font-size: 17px;
+        }
+
+        #Uname {
+            width: 400px;
+            height: 30px;
+            border: none;
+            border-radius: 3px;
+            padding-left: 8px;
+        }
+
+        #Pass {
+            width: 300px;
+            height: 30px;
+            border: none;
+            border-radius: 3px;
+            padding-left: 8px;
+        }
+
+        #log {
+            width: 300px;
+            height: 30px;
+            border: none;
+            border-radius: 17px;
+            padding-left: 7px;
+            color: blue;
+        }
+
+        span {
+            color: white;
+            font-size: 17px;
+        }
+
+    </style>
+    <br />
+    <div class="col-lg-12 col-lg-offset-3 text-center" asp-area="" asp-controller="Login" asp-action="Index"><h4>User Login</h4></div>
+
+    <br />
+    @if (Model != null && Model.ErrorMessage!=null && Model.ErrorMessage.Length > 0)
+    {
+        <div class="col-lg-12 col-lg-offset-3 text-center"  role="alert">
+            <strong>@Model.ErrorMessage</strong>
+        </div>
+    }
+
+    <form method="post">
+        <div class="login">
+            <div class="col-lg-12 col-lg-offset-3 text-center" asp-area="" asp-controller="Login" asp-action="Index"><h6>Enter username and password</h6></div>
+            <label for="uname"><b>Username :</b></label>
+            <input asp-for="UserName" placeholder="Enter Username" class="form-control" name="username" value="@Model.UserName" required />
+            <br />
+            <br />
+            <label for="psw"><b>Password :</b></label>
+            <input asp-for="Password" placeholder="Enter Password" class="form-control" name="password" value="@Model.Password" required />
+        </div>
+        <br />
+        <div class="col-lg-12 col-lg-offset-3 text-center">
+            <button asp-action="Login" asp-controller="Login" class="btn btn-primary">Login</button>
+            <a class="btn btn-primary btn" href="/">Cancel</a>
+        </div>
+    </form>
+</body>
+</html>
+
+

@@ -1,0 +1,62 @@
+﻿@model Interfleet.XIUserManagement.Models.Users;
+@{
+}
+<br>
+<h2>New user</h2>
+@if (Model != null && Model.ErrorMessage != null && Model.ErrorMessage.Length > 0)
+{
+    <div class="col-lg-12 col-lg-offset-3 text-center" role="alert">
+        <strong>@Model.ErrorMessage</strong>
+    </div>
+}
+<form method="post">
+    <div class="row-mb-3">
+        <label class="col-sm-3 col-form-label">UserName</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" name="username" asp-for="UserName" value="@Model.UserName">
+            <span asp-validation-for="UserName"></span>
+        </div>
+    </div>
+    <div class="row-mb-3">
+        <label class="col-sm-3 col-form-label">Passowrd</label>
+        <div class="col-sm-3">
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+            <span asp-validation-for="Password"></span>
+        </div>
+    </div>
+    <div class="row-mb-3">
+        <label class="col-sm-3 col-form-label">Company</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" name="company" asp-for="Company" value="@Model.Company">
+            <span asp-validation-for="Company"></span>
+        </div>
+    </div>
+    <div class="row-mb-3">
+        <label class="col-sm-3 col-form-label">Comments</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" name="comments" asp-for="Comments" value="@Model.Comments">
+            <span asp-validation-for="Comments"></span>
+        </div>
+    </div>
+    <div class="row-mb-3">
+        <label class="col-sm-3 col-form-label">Admin</label>
+        <div class="col-sm-3">
+            @Html.CheckBoxFor(model => model.IsAdmin)
+        </div>
+    </div>
+    @if (Model.SuccessMessage.Length > 0)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>@Model.SuccessMessage</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <br />
+
+    <div class="row-cols-md-5">
+        <div>
+            <button asp-action="Create" asp-controller="User" class="btn btn-primary">Submit</button>
+            <a class="btn btn-outline-primary" href="/User/Index" role="button">Cancel</a>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Http;
+@model List<Interfleet.XIUserManagement.Models.Users>
+@{
+}
+<br />
+<h5>List of Users</h5>
+<a class='btn btn-primary btn-sm' href='Create'>New user</a>
+<a class='btn btn-primary btn-sm' href='/Home/Index'>Home</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.UserName</td>
+                <td>@item.Company</td>
+                <td>@item.Comments</td>
+                <td>
+                    <a class="btn btn-primary btn" href="Edit?userId=@item.UserId">Edit</a>
+                    <a class="btn btn-primary btn" href="Delete?userId=@item.UserId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

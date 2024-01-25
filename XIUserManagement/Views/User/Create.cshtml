@@ -25,6 +25,13 @@
         </div>
     </div>
     <div class="row-mb-3">
+        <label class="col-sm-3 col-form-label">Confirm Passowrd</label>
+        <div class="col-sm-3">
+            @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control" })
+            <span asp-validation-for="ConfirmPassword"></span>
+        </div>
+    </div>
+    <div class="row-mb-3">
         <label class="col-sm-3 col-form-label">Company</label>
         <div class="col-sm-3">
             <input type="text" class="form-control" name="company" asp-for="Company" value="@Model.Company">
@@ -60,3 +67,10 @@
         </div>
     </div>
 </form>
+@section scripts {
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        windowonunload = function () { null };
+    </script>
+}

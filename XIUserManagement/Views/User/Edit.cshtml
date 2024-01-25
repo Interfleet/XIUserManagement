@@ -48,3 +48,10 @@
         </div>
     </div>
 </form>
+@section scripts {
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        windowonunload = function () { null };
+    </script>
+}

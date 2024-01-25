@@ -121,18 +121,38 @@ namespace Interfleet.XIUserManagement.Models
 
 
         protected internal byte[] PasswordHash { get; set; }
+
         protected internal byte[] PasswordSalt { get; set; }
+
         protected internal int UserId { get; set; }
+
         protected internal Guid Id { get; set; }
+
         [Required]
+        [StringLength(15, MinimumLength = 3)]
         public string? UserName { get; set; }
+
         [Required]
+        [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$^+=!*()@%&]).{8,}$", ErrorMessage = "Password must be a minimum of 8 characters and a combination of one uppercase,one lowercase,one special character and one digit")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
         [Required]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Password and confirm password do not match, please try again !")]
+        public string ConfirmPassword { get; set; }
+
+
+        [Required]
+        [StringLength(15, MinimumLength = 3)]
         public string? Company { get; set; }
+
+
         [Required]
+        [StringLength(100, MinimumLength = 3)]
         public string? Comments { get; set; }
+
+
         public bool IsAdmin { get; set; }
 
     }

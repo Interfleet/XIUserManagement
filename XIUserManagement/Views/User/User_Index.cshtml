@@ -1,6 +1,17 @@
-﻿@model List<Interfleet.XIUserManagement.Models.Users>
+﻿@using Interfleet.XIUserManagement.Models
+@using Microsoft.AspNetCore.Http;
+@model List<Interfleet.XIUserManagement.Models.Users>
 @{
+    Pager pager = new Pager();
+    int pageNo = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
 }
+<br />
+@* <partial name="_pager" model="@pager" /> *@
 <br />
 <h5>List of Users</h5>
 <a class='btn btn-primary btn-sm' href='/Home/Index'>Home</a>
@@ -23,3 +34,13 @@
         }
     </tbody>
 </table>
+<script>
+    function DisableBackButton() {
+        window.history.forward()
+    }
+    DisableBackButton();
+    window.onload = DisableBackButton;
+    window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
+    window.onload = function () { void (0) }
+</script>
+<partial name="_pager" model="@pager" />

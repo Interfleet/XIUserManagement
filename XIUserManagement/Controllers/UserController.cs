@@ -134,11 +134,14 @@ namespace Interfleet.XIUserManagement.Controllers
 
                 user.SuccessMessage = "User details saved successfully!";
                 userList = _userRepository.GetUsers();
+                var adminUser = userList.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();
+
                 //pagination
                 var pager = new Pager(userList.Count, pg, pageSize);
                 lstUserRecInfo = _userService.Pagination(pg, userList, lstUserRecInfo, pager, pageSize);
+                var userSearchModel = new Tuple<List<Users>, Search>(lstUserRecInfo, search);
                 ViewBag.pager = pager;
-                return userList.Where(u => u.UserName == _loginViewModel.UserName).Select(i => i.IsAdmin).FirstOrDefault() ? View("Admin_Index", lstUserRecInfo) : View("User_Index", lstUserRecInfo);
+                return adminUser ? View("Admin_Index", userSearchModel) : View("User_Index", userSearchModel);
             }
             catch (Exception ex)
             {

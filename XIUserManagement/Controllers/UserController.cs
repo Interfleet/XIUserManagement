@@ -1,6 +1,7 @@
 ﻿using Interfleet.XaltAuthenticationAPI.Services;
 using Interfleet.XIUserManagement.Models;
 using Interfleet.XIUserManagement.Repositories;
+using Interfleet.XIUserManagement.Services;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -12,29 +13,48 @@ namespace Interfleet.XIUserManagement.Controllers
 
         private readonly IUserRepository _userRepository;
         private readonly AuthenticationService _authenticationService;
+        private readonly UserService _userService;
         List<Users> lstUserInfo = new List<Users>();
+        List<Users> lstUserRecInfo = new List<Users>();
         LoginViewModel _loginViewModel;
-        public UserController(IUserRepository userRepository, AuthenticationService authenticationService, LoginViewModel loginViewModel)
+        const int pageSize = 10;
+
+        public UserController(IUserRepository userRepository, AuthenticationService authenticationService, UserService userService, LoginViewModel loginViewModel)
         {
             _userRepository = userRepository;
             _authenticationService = authenticationService;
+            _userService = userService;
             _loginViewModel = loginViewModel;
         }
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string searchValue, string searchBy, int pg = 1)
         {
-
             try
             {
+                Users user = new();
                 Users userInfo = new();
                 _loginViewModel.UserName = HttpContext.Session.GetString("username");
                 lstUserInfo = _userRepository.GetUsers();
+                var adminUser = lstUserInfo.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();
+
+                //search functionality
+                if (searchBy != null && searchValue != null)
+                {
+                    lstUserInfo = _userService.Search(lstUserInfo, user, searchBy, searchValue);
+                }
+
+                //pagination
+                var pager = new Pager(lstUserInfo.Count, pg, pageSize);
+                lstUserRecInfo = _userService.Pagination(pg, lstUserInfo, lstUserRecInfo, pager, pageSize);
+                ViewBag.pager = pager;
+
+                return adminUser ? View("Admin_Index", lstUserRecInfo) : View("User_Index", lstUserRecInfo);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            return lstUserInfo.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault() ? View("Admin_Index", lstUserInfo) : View("User_Index", lstUserInfo);
+            return View("User_Index", lstUserRecInfo);
         }
 
         [HttpGet]
@@ -44,7 +64,7 @@ namespace Interfleet.XIUserManagement.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Users user)
+        public IActionResult Create(Users user, int pg = 1)
         {
             try
             {
@@ -65,7 +85,11 @@ namespace Interfleet.XIUserManagement.Controllers
 
                 user.SuccessMessage = "User details saved successfully!";
                 lstUserInfo = _userRepository.GetUsers();
-                return lstUserInfo.Where(u => u.UserName == _loginViewModel.UserName).Select(i => i.IsAdmin).FirstOrDefault() ? View("Admin_Index", lstUserInfo) : View("User_Index", lstUserInfo);
+                //pagination
+                var pager = new Pager(lstUserInfo.Count, pg, pageSize);
+                lstUserRecInfo = _userService.Pagination(pg, lstUserInfo, lstUserRecInfo, pager, pageSize);
+                ViewBag.pager = pager;
+                return lstUserInfo.Where(u => u.UserName == _loginViewModel.UserName).Select(i => i.IsAdmin).FirstOrDefault() ? View("Admin_Index", lstUserRecInfo) : View("User_Index", lstUserRecInfo);
             }
             catch (Exception ex)
             {
@@ -96,7 +120,7 @@ namespace Interfleet.XIUserManagement.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Users user)
+        public IActionResult Edit(Users user, int pg = 1)
         {
             try
             {
@@ -109,7 +133,11 @@ namespace Interfleet.XIUserManagement.Controllers
                 }
                 user.SuccessMessage = "User details updated successfully!";
                 lstUserInfo = _userRepository.GetUsers();
-                return lstUserInfo.Where(u => u.UserName == _loginViewModel.UserName).Select(i => i.IsAdmin).FirstOrDefault() ? View("Admin_Index", lstUserInfo) : View("User_Index", lstUserInfo);
+                //pagination
+                var pager = new Pager(lstUserInfo.Count, pg, pageSize);
+                lstUserRecInfo = _userService.Pagination(pg, lstUserInfo, lstUserRecInfo, pager, pageSize);
+                ViewBag.pager = pager;
+                return lstUserInfo.Where(u => u.UserName == _loginViewModel.UserName).Select(i => i.IsAdmin).FirstOrDefault() ? View("Admin_Index", lstUserRecInfo) : View("User_Index", lstUserRecInfo);
             }
             catch (Exception ex)
             {
@@ -140,7 +168,7 @@ namespace Interfleet.XIUserManagement.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Users user)
+        public IActionResult Delete(Users user, int pg = 1)
         {
             try
             {
@@ -153,7 +181,11 @@ namespace Interfleet.XIUserManagement.Controllers
                 }
                 user.SuccessMessage = "User details deleted successfully!";
                 lstUserInfo = _userRepository.GetUsers();
-                return lstUserInfo.Where(u => u.UserName == _loginViewModel.UserName).Select(i => i.IsAdmin).FirstOrDefault() ? View("Admin_Index", lstUserInfo) : View("User_Index", lstUserInfo);
+                //pagination
+                var pager = new Pager(lstUserInfo.Count, pg, pageSize);
+                lstUserRecInfo = _userService.Pagination(pg, lstUserInfo, lstUserRecInfo, pager, pageSize);
+                ViewBag.pager = pager;
+                return lstUserInfo.Where(u => u.UserName == _loginViewModel.UserName).Select(i => i.IsAdmin).FirstOrDefault() ? View("Admin_Index", lstUserRecInfo) : View("User_Index", lstUserRecInfo);
             }
             catch (Exception ex)
             {

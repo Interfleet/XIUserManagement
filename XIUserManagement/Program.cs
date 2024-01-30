@@ -3,6 +3,7 @@ using Interfleet.XaltAuthenticationAPI.Services;
 using Interfleet.XIUserManagement.Context;
 using Interfleet.XIUserManagement.Models;
 using Interfleet.XIUserManagement.Repositories;
+using Interfleet.XIUserManagement.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,7 @@ builder.Services.AddSingleton<LoginViewModel>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddSingleton<AuthenticationService>();
+builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<IAuthorization, Authorization>();
 builder.Services.AddSession();
 //builder.Services.AddSession(options =>

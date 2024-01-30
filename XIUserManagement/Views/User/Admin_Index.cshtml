@@ -1,11 +1,49 @@
-﻿@using Microsoft.AspNetCore.Http;
+﻿@using Interfleet.XIUserManagement.Models
+@using Microsoft.AspNetCore.Http;
 @model List<Interfleet.XIUserManagement.Models.Users>
 @{
+    Pager pager = new Pager();
+    int pageNo = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
 }
 <br />
+@* <partial name="_pager" model="@pager" /> *@
+
 <h5>List of Users</h5>
 <a class='btn btn-primary btn-sm' href='Create'>New user</a>
 <a class='btn btn-primary btn-sm' href='/Home/Index'>Home</a>
+<br/>
+<br/>
+@using (Html.BeginForm("Index", "User", FormMethod.Get))
+{
+    <table>
+        <tr>
+            <td>
+                <span><b>Serach by:</b></span>
+                @Html.RadioButton("searchBy", "UserName", true)
+                <text>User Name</text>
+                @Html.RadioButton("searchBy", "Company", false)
+                <text>Company</text>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.TextBox("searchValue", null, new { Class = "form-control", placeholder = "Enter search value" })
+            </td>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                <input type="submit" value="Search" class="btn btn-success" />
+            </td>
+        </tr>
+    </table>
+}
+<br/>
 <table class="table">
     <thead>
         <tr>
@@ -38,3 +76,4 @@
     window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
     window.onload = function () { void (0) }
 </script>
+<partial name="_pager" model="@pager" />

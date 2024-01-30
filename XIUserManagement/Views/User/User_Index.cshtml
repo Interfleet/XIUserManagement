@@ -1,6 +1,7 @@
 ﻿@using Interfleet.XIUserManagement.Models
 @using Microsoft.AspNetCore.Http;
-@model List<Interfleet.XIUserManagement.Models.Users>
+@model Tuple<List<Users>, Search>
+
 @{
     Pager pager = new Pager();
     int pageNo = 0;
@@ -15,6 +16,38 @@
 <br />
 <h5>List of Users</h5>
 <a class='btn btn-primary btn-sm' href='/Home/Index'>Home</a>
+<br />
+@using (Html.BeginForm("Index", "User", FormMethod.Get))
+{
+    <table>
+        <tr>
+            <td>
+                <span><b>Serach by:</b></span>
+                @Html.RadioButton("searchBy", "UserName", true)
+                <text>User Name</text>
+                @Html.RadioButton("searchBy", "Company", false)
+                <text>Company</text>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" class="form-control" name="searchValue" placeholder="Enter search value" asp-for="Item2.SearchValue" value="@Model.Item2.SearchValue">
+            </td>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                <button value="Search" asp-action="Search" asp-controller="User" class="btn btn-primary">Submit</button>
+            </td>
+        </tr>
+    </table>
+    @if (Model != null && Model.Item2.ErrorMessage != null && Model.Item2.ErrorMessage.Length > 0)
+    {
+        <strong class="text-danger">@Model.Item2.ErrorMessage</strong>
+
+    }
+}
+<br />
 <table class="table">
     <thead>
         <tr>
@@ -24,7 +57,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Item1)
         {
             <tr>
                 <td>@item.UserName</td>

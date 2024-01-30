@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<Users>();
+builder.Services.AddSingleton<Search>();
 builder.Services.AddSingleton<LoginViewModel>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<DapperContext>();
@@ -18,6 +19,7 @@ builder.Services.AddSingleton<AuthenticationService>();
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<IAuthorization, Authorization>();
 builder.Services.AddSession();
+builder.Services.AddMemoryCache();
 //builder.Services.AddSession(options =>
 //{
 //    options.IdleTimeout = TimeSpan.FromSeconds(10);

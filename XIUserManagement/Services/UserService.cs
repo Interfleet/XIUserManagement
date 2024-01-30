@@ -4,16 +4,16 @@ namespace Interfleet.XIUserManagement.Services
 {
     public class UserService
     {
-        public List<Users> Search(List<Users> lstUserInfo, Users user, string searchBy, string searchValue)
+        public List<Users> Search(List<Users> lstUserInfo, Search search, string searchBy, string searchValue)
         {
             //search functionality
             if (lstUserInfo.Count == 0)
             {
-                user.ErrorMessage = "No user available";
+                search.ErrorMessage = "No user available";
             }
             if (string.IsNullOrEmpty(searchValue))
             {
-                user.ErrorMessage = "Please enter search value";
+                search.ErrorMessage = "Please enter search value";
             }
             else
             {

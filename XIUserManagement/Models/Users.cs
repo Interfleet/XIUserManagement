@@ -151,8 +151,6 @@ namespace Interfleet.XIUserManagement.Models
         [Required]
         [StringLength(100, MinimumLength = 3)]
         public string? Comments { get; set; }
-
-
         public bool IsAdmin { get; set; }
 
     }

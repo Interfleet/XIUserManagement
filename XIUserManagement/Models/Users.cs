@@ -144,7 +144,7 @@ namespace Interfleet.XIUserManagement.Models
 
 
         [Required]
-        [StringLength(15, MinimumLength = 3)]
+        [StringLength(50, MinimumLength = 3)]
         public string? Company { get; set; }
 
 

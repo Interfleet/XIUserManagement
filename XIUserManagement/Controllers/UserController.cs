@@ -40,7 +40,7 @@ namespace Interfleet.XIUserManagement.Controllers
                 Users userInfo = new();
                 _loginViewModel.UserName = HttpContext.Session.GetString("username");
 
-                
+
                 //checks if cache entries exists
                 if (!_memoryCache.TryGetValue(cacheKey, out List<Users> userList))
                 {
@@ -76,7 +76,7 @@ namespace Interfleet.XIUserManagement.Controllers
             return View("User_Index", lstUserRecInfo);
         }
         [HttpGet]
-        public IActionResult Search(string searchValue, string searchBy,int pg=1)
+        public IActionResult Search(string searchValue, string searchBy, int pg = 1)
         {
             var cacheKey = "userList";
             //checks if cache entries exists
@@ -98,7 +98,7 @@ namespace Interfleet.XIUserManagement.Controllers
             userList = _userService.Search(userList, search, searchBy, searchValue);
 
             var adminUser = userList.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();
-            
+
             //pagination
             var pager = new Pager(userList.Count, pg, pageSize);
             lstUserRecInfo = _userService.Pagination(pg, userList, lstUserRecInfo, pager, pageSize);
@@ -184,22 +184,7 @@ namespace Interfleet.XIUserManagement.Controllers
                     return View();
                 }
                 user.SuccessMessage = "User details updated successfully!";
-
-                if (!_memoryCache.TryGetValue(cacheKey, out List<Users> userList))
-                {
-                    //calling the server
-                    userList = _userRepository.GetUsers();
-
-                    //setting up cache options
-                    var cacheExpiryOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpiration = DateTime.Now.AddMinutes(10),
-                        Priority = CacheItemPriority.High,
-                        SlidingExpiration = TimeSpan.FromMinutes(8)
-                    };
-                    //setting cache entries
-                    _memoryCache.Set(cacheKey, userList, cacheExpiryOptions);
-                }
+                userList = _userRepository.GetUsers();
                 var adminUser = userList.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();
 
                 //pagination
@@ -250,22 +235,7 @@ namespace Interfleet.XIUserManagement.Controllers
                     return View();
                 }
                 user.SuccessMessage = "User details deleted successfully!";
-
-                if (!_memoryCache.TryGetValue(cacheKey, out List<Users> userList))
-                {
-                    //calling the server
-                    userList = _userRepository.GetUsers();
-
-                    //setting up cache options
-                    var cacheExpiryOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpiration = DateTime.Now.AddMinutes(10),
-                        Priority = CacheItemPriority.High,
-                        SlidingExpiration = TimeSpan.FromMinutes(8)
-                    };
-                    //setting cache entries
-                    _memoryCache.Set(cacheKey, userList, cacheExpiryOptions);
-                }
+                userList = _userRepository.GetUsers();
                 var adminUser = userList.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();
 
                 //pagination

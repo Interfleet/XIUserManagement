@@ -3,7 +3,7 @@
 }
 <br>
 
-@if (Model.ErrorMessage.Length > 0)
+@if (Model != null && Model.ErrorMessage != null && Model.ErrorMessage.Length > 0)
 {
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <strong>@Model.ErrorMessage</strong>

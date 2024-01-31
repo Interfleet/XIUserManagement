@@ -39,24 +39,24 @@ namespace Interfleet.XIUserManagement.Controllers
                 Users user = new();
                 Users userInfo = new();
                 _loginViewModel.UserName = HttpContext.Session.GetString("username");
-
+                userList = _userRepository.GetUsers();
 
                 //checks if cache entries exists
-                if (!_memoryCache.TryGetValue(cacheKey, out List<Users> userList))
-                {
-                    //calling the server
-                    userList = _userRepository.GetUsers();
+                //if (!_memoryCache.TryGetValue(cacheKey, out List<Users> userList))
+                //{
+                //    //calling the server
+                //    userList = _userRepository.GetUsers();
 
-                    //setting up cache options
-                    var cacheExpiryOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpiration = DateTime.Now.AddMinutes(10),
-                        Priority = CacheItemPriority.High,
-                        SlidingExpiration = TimeSpan.FromMinutes(8)
-                    };
-                    //setting cache entries
-                    _memoryCache.Set(cacheKey, userList, cacheExpiryOptions);
-                }
+                //    //setting up cache options
+                //    var cacheExpiryOptions = new MemoryCacheEntryOptions
+                //    {
+                //        AbsoluteExpiration = DateTime.Now.AddMinutes(10),
+                //        Priority = CacheItemPriority.High,
+                //        SlidingExpiration = TimeSpan.FromMinutes(8)
+                //    };
+                //    //setting cache entries
+                //    _memoryCache.Set(cacheKey, userList, cacheExpiryOptions);
+                //}
 
 
 
@@ -80,21 +80,21 @@ namespace Interfleet.XIUserManagement.Controllers
         {
             var cacheKey = "userList";
             //checks if cache entries exists
-            if (!_memoryCache.TryGetValue(cacheKey, out List<Users> userList))
-            {
-                //calling the server
-                userList = _userRepository.GetUsers();
+            //if (!_memoryCache.TryGetValue(cacheKey, out List<Users> userList))
+            //{
+            //    //calling the server
+            userList = _userRepository.GetUsers();
 
-                //setting up cache options
-                var cacheExpiryOptions = new MemoryCacheEntryOptions
-                {
-                    AbsoluteExpiration = DateTime.Now.AddMinutes(10),
-                    Priority = CacheItemPriority.High,
-                    SlidingExpiration = TimeSpan.FromMinutes(8)
-                };
-                //setting cache entries
-                _memoryCache.Set(cacheKey, userList, cacheExpiryOptions);
-            }
+            //    //setting up cache options
+            //    var cacheExpiryOptions = new MemoryCacheEntryOptions
+            //    {
+            //        AbsoluteExpiration = DateTime.Now.AddMinutes(10),
+            //        Priority = CacheItemPriority.High,
+            //        SlidingExpiration = TimeSpan.FromMinutes(8)
+            //    };
+            //    //setting cache entries
+            //    _memoryCache.Set(cacheKey, userList, cacheExpiryOptions);
+            //}
             userList = _userService.Search(userList, search, searchBy, searchValue);
 
             var adminUser = userList.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();

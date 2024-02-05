@@ -18,21 +18,21 @@ namespace Interfleet.XIUserManagement.Repositories
         public List<Users> GetUsers()
         {
             using var connection = _context.CreateConnection();
-            var UserInfo = connection.Query<Users>(Constants.Constants.GetAllUsersQuery).ToList();
+            var UserInfo = connection.Query<Users>(Constants.QueryConstants.GetAllUsersQuery).ToList();
             return UserInfo;
         }
         public Users FindUserByName(string userName)
         {
             using (var connection = _context.CreateConnection())
             {
-                var user = connection.QueryFirstOrDefault<Users>(Constants.Constants.GetUserByUserNameQuery, new { userName });
+                var user = connection.QueryFirstOrDefault<Users>(Constants.QueryConstants.GetUserByUserNameQuery, new { userName });
                 return user;
             }
         }
         public Users GetUserById(int userId)
         {
             using var connection = _context.CreateConnection();
-            var user = connection.QueryFirstOrDefault<Users>(Constants.Constants.GetUserByUserIdQuery, new { userId });
+            var user = connection.QueryFirstOrDefault<Users>(Constants.QueryConstants.GetUserByUserIdQuery, new { userId });
             return user;
         }
         public bool Save(Users user)
@@ -44,21 +44,21 @@ namespace Interfleet.XIUserManagement.Repositories
             user.Id = Guid.NewGuid();
             
 
-            user = connection.QueryFirstOrDefault<Users>(Constants.Constants.SaveUserQuery, new { user.UserName, user.Company, user.Comments, user.Id, user.PasswordHash, user.PasswordSalt,user.IsAdmin });
+            user = connection.QueryFirstOrDefault<Users>(Constants.QueryConstants.SaveUserQuery, new { user.UserName, user.Company, user.Comments, user.Id, user.PasswordHash, user.PasswordSalt,user.IsAdmin });
             return true;
         }
 
         public bool Update(Users user)
         {
             using var connection = _context.CreateConnection();
-            user = connection.QueryFirstOrDefault<Users>(Constants.Constants.UpdateUserQuery, new { user.UserId, user.UserName, user.Company, user.Comments });
+            user = connection.QueryFirstOrDefault<Users>(Constants.QueryConstants.UpdateUserQuery, new { user.UserId, user.UserName, user.Company, user.Comments });
             return true;
         }
 
         public bool Delete(Users user)
         {
             using var connection = _context.CreateConnection();
-            user = connection.QueryFirstOrDefault<Users>(Constants.Constants.DeleteUserQuery, new { user.UserId });
+            user = connection.QueryFirstOrDefault<Users>(Constants.QueryConstants.DeleteUserQuery, new { user.UserId });
             return true;
         }
     }

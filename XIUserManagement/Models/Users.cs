@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Interfleet.XIUserManagement.Constants;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Contracts;
@@ -18,7 +19,7 @@ namespace Interfleet.XIUserManagement.Models
         }
         public void ChangePassword(string newPassword)
         {
-            if (newPassword == null) throw new ArgumentNullException("newPassword");
+            if (newPassword == null) throw new ArgumentNullException(nameof(newPassword));
 
             var salt = GenerateSalt();
             var hash = HashPassword(newPassword, salt);
@@ -130,16 +131,16 @@ namespace Interfleet.XIUserManagement.Models
 
         [Required]
         [StringLength(15, MinimumLength = 3)]
-        public string? UserName { get; set; }
+        public string UserName { get; set; }
 
         [Required]
-        [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$^+=!*()@%&]).{8,}$", ErrorMessage = "Password must be a minimum of 8 characters and a combination of one uppercase,one lowercase,one special character and one digit")]
+        [RegularExpression(UserMessageConstants.passwordRegularExpression, ErrorMessage = UserMessageConstants.passwordValidatorMessage)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Password and confirm password do not match, please try again !")]
+        [Compare("Password", ErrorMessage = UserMessageConstants.passwordComparatorMessage)]
         public string ConfirmPassword { get; set; }
 
 

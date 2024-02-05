@@ -10,6 +10,6 @@ namespace Interfleet.XIUserManagement.Models
         [DataType(DataType.Password)]
         public string? Password { get; set; }
         internal Guid Id { get; set; }
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
     }
 }

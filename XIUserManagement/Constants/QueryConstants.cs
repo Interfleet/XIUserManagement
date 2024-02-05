@@ -1,7 +1,7 @@
 ﻿
 namespace Interfleet.XIUserManagement.Constants
 {
-    public static class Constants
+    public static class QueryConstants
     {
         public const string GetAllUsersQuery = @"Select UserId,userName,Password,Company,Comments,PasswordHash,PasswordSalt,Id,IsAdmin from tblUsers order by UserName";
         public const string GetUserByUserNameQuery = @"SELECT userId,username,company,comments,passwordHash,passwordSalt,Id,IsAdmin FROM tblUsers where userName=@userName order by UserName";

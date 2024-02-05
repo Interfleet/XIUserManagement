@@ -50,10 +50,10 @@ namespace Interfleet.XaltAuthenticationAPI.Services
             var user = _userRepository.FindUserByName(userName);
 
             if (user != null && user.Id.Equals(Guid.Empty))
-                throw new ApplicationException("First create the user before trying to login with that user.");
+                throw new ApplicationException(UserMessageConstants.createUserMessage);
 
             if (user == null)
-                throw new UserNotFoundException("Can not login with a non existing user");
+                throw new UserNotFoundException(UserMessageConstants.errorInLoginMessage);
 
             return user.VerifyPasswordWithLockout(password, passwordSalt);
 
@@ -68,16 +68,16 @@ namespace Interfleet.XaltAuthenticationAPI.Services
 
             if (user == null)
             {
-                throw new UserNotFoundException(string.Format("User {0} does not exist", userRequest.UserName));
+                throw new UserNotFoundException(string.Format(UserMessageConstants.wrongUnamePwdMessage, userRequest.UserName));
             }
 
             if (user != null && VerifyPassword(userRequest.UserName,userRequest.Password,user.PasswordSalt))
             {
-                Authorize(new Token(userRequest.Id), Constants.RequiredRoles);
+                Authorize(new Token(userRequest.Id), QueryConstants.RequiredRoles);
                 return new Token(userRequest.Id);
             }
 
-            throw new AuthorizationException(string.Format("Login failed for user {0}", userRequest.UserName));
+            throw new AuthorizationException(string.Format(UserMessageConstants.wrongUnamePwdMessage, userRequest.UserName));
 
         }
 
@@ -89,7 +89,7 @@ namespace Interfleet.XaltAuthenticationAPI.Services
             {
                 foreach (var role in requiredRoles.Where(role => !_authorization.Authorize(userToken, role)))
                 {
-                    throw new AuthorizationException(string.Format("Authorization failed. Required role {0}", role));
+                    throw new AuthorizationException(string.Format(UserMessageConstants.authorizationFailedMessage, role));
                 }
             }
             return true;

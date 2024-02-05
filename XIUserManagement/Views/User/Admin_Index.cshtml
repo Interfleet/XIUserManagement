@@ -1,54 +1,40 @@
 ﻿@using Interfleet.XIUserManagement.Models
 @using Microsoft.AspNetCore.Http;
 @model Tuple<List<Users>, Search>
+
 @{
+    ViewData["Title"] = "Index";
+
     Pager pager = new Pager();
     int pageNo = 0;
-    if (ViewBag.Pager != null)
+    if (ViewBag.SearchPager != null)
     {
-        pager = ViewBag.Pager;
+        pager = ViewBag.SearchPager;
         pageNo = pager.CurrentPage;
     }
+
 }
 
 <br />
-@* <partial name="_pager" model="@pager" /> *@
+<div class="container btn-group" border-radius: 25px; height:45px;">
+    <div class="col-4 p-0 justify-content-end mt-1">
+        <h5>List of Users</h5>
+        <a class='btn btn-primary btn-sm' href='Create'>New user</a>
+        <a class='btn btn-primary btn-sm' href='/Home/Index'>Home</a>
+    </div>
+</div>
 
-<h5>List of Users</h5>
-<a class='btn btn-primary btn-sm' href='Create'>New user</a>
-<a class='btn btn-primary btn-sm' href='/Home/Index'>Home</a>
 <br />
 <br />
-@using (Html.BeginForm("Index", "User", FormMethod.Get))
+
+<partial name="_pager" model="@pager" />
+
+@if (Model.Item2 != null && Model.Item2.ErrorMessage != null && Model.Item2.ErrorMessage.Length > 0)
 {
-    <table>
-        <tr>
-            <td>
-                <span><b>Serach by:</b></span>
-                @Html.RadioButton("searchBy", "UserName", true)
-                <text>User Name</text>
-                @Html.RadioButton("searchBy", "Company", false)
-                <text>Company</text>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" class="form-control" name="searchValue" placeholder="Enter search value" asp-for="Item2.SearchValue" value="@Model.Item2.SearchValue">
-            </td>
-            <td>
-                &nbsp;
-            </td>
-            <td>
-                <button value="Search" asp-action="Search" asp-controller="User" class="btn btn-primary">Submit</button>
-            </td>
-        </tr>
-    </table>
-    @if (Model != null && Model.Item2.ErrorMessage != null && Model.Item2.ErrorMessage.Length > 0)
-    {
-        <strong class="text-danger">@Model.Item2.ErrorMessage</strong>
+    <strong class="text-danger">@Model.Item2.ErrorMessage</strong>
 
-    }
 }
+
 <br />
 <table class="table">
     <thead>
@@ -65,7 +51,7 @@
                 <td>@item.UserName</td>
                 <td>@item.Company</td>
                 <td>@item.Comments</td>
-                <td>
+                <td class="col-3 p-0 justify-content-end mt-1">
                     <a class="btn btn-primary btn" href="Edit?userId=@item.UserId">Edit</a>
                     <a class="btn btn-primary btn" href="Delete?userId=@item.UserId">Delete</a>
                 </td>
@@ -82,4 +68,3 @@
     window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
     window.onload = function () { void (0) }
 </script>
-<partial name="_pager" model="@pager" />

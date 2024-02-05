@@ -1,4 +1,5 @@
 ﻿using Interfleet.XaltAuthenticationAPI.Services;
+using Interfleet.XIUserManagement.Constants;
 using Interfleet.XIUserManagement.Models;
 using Interfleet.XIUserManagement.Repositories;
 using Interfleet.XIUserManagement.Services;
@@ -16,12 +17,12 @@ namespace Interfleet.XIUserManagement.Controllers
         private readonly AuthenticationService _authenticationService;
         private readonly UserService _userService;
         private readonly IMemoryCache _memoryCache;
-        List<Users> userList = new List<Users>();
-        Search search = new Search();
-        List<Users> lstUserRecInfo = new List<Users>();
+        Search search = new();
+        List<Users> userList = new();
+        List<Users> paginatedUserList = new();
         LoginViewModel _loginViewModel;
         const int pageSize = 10;
-        const string cacheKey = "userList";
+        const string cacheKey = UserMessageConstants.cacheKey;
 
         public UserController(IUserRepository userRepository, AuthenticationService authenticationService, UserService userService, LoginViewModel loginViewModel, IMemoryCache memoryCache)
         {
@@ -31,80 +32,53 @@ namespace Interfleet.XIUserManagement.Controllers
             _loginViewModel = loginViewModel;
             _memoryCache = memoryCache;
         }
-        [HttpGet]
-        public IActionResult Index(int pg = 1)
+        public IActionResult Index(string searchBy, string searchValue, int pg = 1, int pageSize = 10)
         {
             try
             {
                 Users user = new();
                 Users userInfo = new();
                 _loginViewModel.UserName = HttpContext.Session.GetString("username");
-                userList = _userRepository.GetUsers();
+                userList = _userService.CacheUserData(cacheKey);
 
-                //checks if cache entries exists
-                //if (!_memoryCache.TryGetValue(cacheKey, out List<Users> userList))
-                //{
-                //    //calling the server
-                //    userList = _userRepository.GetUsers();
+                if (pg < 1) pg = 1;
+                if (searchValue != "" && searchValue != null && searchBy != "" && searchBy != null && searchBy.ToLower() == UserMessageConstants.searchValueOption1)
+                {
+                    userList = userList.Where(u => u.UserName.Contains(searchValue)).ToList();
+                }
+                else if (searchValue != "" && searchValue != null && searchBy != "" && searchBy != null && searchBy.ToLower() == UserMessageConstants.searchValueOption2)
+                {
+                    userList = userList.Where(u => u.Company.Contains(searchValue)).ToList();
+                }
+                paginatedUserList = userList.Skip((pg - 1) * pageSize).Take(pageSize).ToList();
+                Pager SearchPager = new Pager(userList.Count(), pg, pageSize) { Action = "Index", Controller = "User", SearchValue = searchValue, SearchBy = searchBy };
+                ViewBag.SearchPager = SearchPager;
+                ViewBag.PageSizes = _userService.GetPageSizes(pageSize);
+                var userSearchModel = new Tuple<List<Users>, Search>(paginatedUserList, ViewBag.Search);
 
-                //    //setting up cache options
-                //    var cacheExpiryOptions = new MemoryCacheEntryOptions
-                //    {
-                //        AbsoluteExpiration = DateTime.Now.AddMinutes(10),
-                //        Priority = CacheItemPriority.High,
-                //        SlidingExpiration = TimeSpan.FromMinutes(8)
-                //    };
-                //    //setting cache entries
-                //    _memoryCache.Set(cacheKey, userList, cacheExpiryOptions);
-                //}
-
-
-
-                var adminUser = userList.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();
-
-                //pagination
-                var pager = new Pager(userList.Count, pg, pageSize);
-                lstUserRecInfo = _userService.Pagination(pg, userList, lstUserRecInfo, pager, pageSize);
-                ViewBag.pager = pager;
-                var userSearchModel = new Tuple<List<Users>, Search>(lstUserRecInfo, search);
-                return adminUser ? View("Admin_Index", userSearchModel) : View("User_Index", userSearchModel);
+                return _userService.IsAdmin(_loginViewModel, userList) ? View(UserMessageConstants.adminIndex, userSearchModel) : View(UserMessageConstants.userIndex, userSearchModel);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            return View("User_Index", lstUserRecInfo);
+            return View(UserMessageConstants.userIndex, paginatedUserList);
         }
-        [HttpGet]
-        public IActionResult Search(string searchValue, string searchBy, int pg = 1)
+
+        public IActionResult Clear(string searchValue, string searchBy, int pg = 1)
         {
-            var cacheKey = "userList";
-            //checks if cache entries exists
-            //if (!_memoryCache.TryGetValue(cacheKey, out List<Users> userList))
-            //{
-            //    //calling the server
-            userList = _userRepository.GetUsers();
+            searchValue = string.Empty;
+            searchBy = string.Empty;
+            userList = _userService.CacheUserData(cacheKey);
 
-            //    //setting up cache options
-            //    var cacheExpiryOptions = new MemoryCacheEntryOptions
-            //    {
-            //        AbsoluteExpiration = DateTime.Now.AddMinutes(10),
-            //        Priority = CacheItemPriority.High,
-            //        SlidingExpiration = TimeSpan.FromMinutes(8)
-            //    };
-            //    //setting cache entries
-            //    _memoryCache.Set(cacheKey, userList, cacheExpiryOptions);
-            //}
-            userList = _userService.Search(userList, search, searchBy, searchValue);
 
-            var adminUser = userList.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();
+            paginatedUserList = userList.Skip((pg - 1) * pageSize).Take(pageSize).ToList();
+            Pager SearchPager = new Pager(userList.Count(), pg, pageSize) { Action = "Index", Controller = "User", SearchValue = searchValue, SearchBy = searchBy };
+            ViewBag.SearchPager = SearchPager;
+            ViewBag.PageSizes = _userService.GetPageSizes(pageSize);
+            var userSearchModel = new Tuple<List<Users>, Search>(paginatedUserList, ViewBag.Search);
 
-            //pagination
-            var pager = new Pager(userList.Count, pg, pageSize);
-            lstUserRecInfo = _userService.Pagination(pg, userList, lstUserRecInfo, pager, pageSize);
-            var userSearchModel = new Tuple<List<Users>, Search>(lstUserRecInfo, search);
-            ViewBag.pager = pager;
-            return adminUser ? View("Admin_Index", userSearchModel) : View("User_Index", userSearchModel);
+            return _userService.IsAdmin(_loginViewModel, userList) ? View(UserMessageConstants.adminIndex, userSearchModel) : View(UserMessageConstants.userIndex, userSearchModel);
         }
         [HttpGet]
         public IActionResult Create()
@@ -119,7 +93,7 @@ namespace Interfleet.XIUserManagement.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    user.ErrorMessage = "Model data is invalid!";
+                    user.ErrorMessage = UserMessageConstants.modelInvalidDataMessage;
                     return View(user);
                 }
                 if (_authenticationService.VerifyUser(user.UserName))
@@ -127,21 +101,22 @@ namespace Interfleet.XIUserManagement.Controllers
                     bool result = _userRepository.Save(user);
                     if (!result)
                     {
-                        user.ErrorMessage = "Unable to save user details!";
+                        user.ErrorMessage = UserMessageConstants.dataNotSavedMessage;
                         return View();
                     }
                 }
 
-                user.SuccessMessage = "User details saved successfully!";
-                userList = _userRepository.GetUsers();
-                var adminUser = userList.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();
+                user.SuccessMessage = UserMessageConstants.dataSavedMessage;
+                userList = _userService.CacheUserData(cacheKey);
 
-                //pagination
-                var pager = new Pager(userList.Count, pg, pageSize);
-                lstUserRecInfo = _userService.Pagination(pg, userList, lstUserRecInfo, pager, pageSize);
-                var userSearchModel = new Tuple<List<Users>, Search>(lstUserRecInfo, search);
-                ViewBag.pager = pager;
-                return adminUser ? View("Admin_Index", userSearchModel) : View("User_Index", userSearchModel);
+                if (pg < 1) pg = 1;
+                paginatedUserList = userList.Skip((pg - 1) * pageSize).Take(pageSize).ToList();
+                Pager SearchPager = new Pager(userList.Count(), pg, pageSize) { Action = "Index", Controller = "User", SearchValue = "", SearchBy = "" };
+                ViewBag.SearchPager = SearchPager;
+                ViewBag.PageSizes = _userService.GetPageSizes(pageSize);
+                var userSearchModel = new Tuple<List<Users>, Search>(paginatedUserList, ViewBag.Search);
+
+                return _userService.IsAdmin(_loginViewModel, userList) ? View(UserMessageConstants.adminIndex, userSearchModel) : View(UserMessageConstants.userIndex, userSearchModel);
             }
             catch (Exception ex)
             {
@@ -158,8 +133,8 @@ namespace Interfleet.XIUserManagement.Controllers
             {
                 if (userId == 0)
                 {
-                    user.ErrorMessage = "User with id{0} not found";
-                    return RedirectToAction("User_Index");
+                    user.ErrorMessage = UserMessageConstants.userNotFoundMessage;
+                    return RedirectToAction(UserMessageConstants.userIndex);
                 }
                 user = _userRepository.GetUserById(userId);
                 return View("Edit", user);
@@ -180,19 +155,20 @@ namespace Interfleet.XIUserManagement.Controllers
                 bool result = _userRepository.Update(user);
                 if (!result)
                 {
-                    user.ErrorMessage = "Unable to update user details!";
+                    user.ErrorMessage = UserMessageConstants.dataNotUpdatedMessage;
                     return View();
                 }
-                user.SuccessMessage = "User details updated successfully!";
-                userList = _userRepository.GetUsers();
-                var adminUser = userList.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();
+                user.SuccessMessage = UserMessageConstants.dataUpdatedMessage;
+                userList = _userService.CacheUserData(cacheKey);
 
-                //pagination
-                var pager = new Pager(userList.Count, pg, pageSize);
-                lstUserRecInfo = _userService.Pagination(pg, userList, lstUserRecInfo, pager, pageSize);
-                var userSearchModel = new Tuple<List<Users>, Search>(lstUserRecInfo, search);
-                ViewBag.pager = pager;
-                return adminUser ? View("Admin_Index", userSearchModel) : View("User_Index", userSearchModel);
+                if (pg < 1) pg = 1;
+                paginatedUserList = userList.Skip((pg - 1) * pageSize).Take(pageSize).ToList();
+                Pager SearchPager = new Pager(userList.Count(), pg, pageSize) { Action = "Index", Controller = "User", SearchValue = "", SearchBy = "" };
+                ViewBag.SearchPager = SearchPager;
+                ViewBag.PageSizes = _userService.GetPageSizes(pageSize);
+                var userSearchModel = new Tuple<List<Users>, Search>(paginatedUserList, ViewBag.Search);
+
+                return _userService.IsAdmin(_loginViewModel, userList) ? View(UserMessageConstants.adminIndex, userSearchModel) : View(UserMessageConstants.userIndex, userSearchModel);
             }
             catch (Exception ex)
             {
@@ -209,8 +185,8 @@ namespace Interfleet.XIUserManagement.Controllers
             {
                 if (userId == 0)
                 {
-                    user.ErrorMessage = "User with id{0} not found";
-                    return RedirectToAction("User_Index");
+                    user.ErrorMessage = UserMessageConstants.userNotFoundMessage;
+                    return RedirectToAction(UserMessageConstants.userIndex);
                 }
                 user = _userRepository.GetUserById(userId);
                 return View("Delete", user);
@@ -231,19 +207,20 @@ namespace Interfleet.XIUserManagement.Controllers
                 bool result = _userRepository.Delete(user);
                 if (!result)
                 {
-                    user.ErrorMessage = "Unable to delete user details!";
+                    user.ErrorMessage = UserMessageConstants.dataNotDeletedMessage;
                     return View();
                 }
-                user.SuccessMessage = "User details deleted successfully!";
-                userList = _userRepository.GetUsers();
-                var adminUser = userList.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();
+                user.SuccessMessage = UserMessageConstants.dataDeletedMessage;
+                userList = _userService.CacheUserData(cacheKey);
 
-                //pagination
-                var pager = new Pager(userList.Count, pg, pageSize);
-                lstUserRecInfo = _userService.Pagination(pg, userList, lstUserRecInfo, pager, pageSize);
-                var userSearchModel = new Tuple<List<Users>, Search>(lstUserRecInfo, search);
-                ViewBag.pager = pager;
-                return adminUser ? View("Admin_Index", userSearchModel) : View("User_Index", userSearchModel);
+                if (pg < 1) pg = 1;
+                paginatedUserList = userList.Skip((pg - 1) * pageSize).Take(pageSize).ToList();
+                Pager SearchPager = new Pager(userList.Count(), pg, pageSize) { Action = "Index", Controller = "User", SearchValue = "", SearchBy = "" };
+                ViewBag.SearchPager = SearchPager;
+                ViewBag.PageSizes = _userService.GetPageSizes(pageSize);
+                var userSearchModel = new Tuple<List<Users>, Search>(paginatedUserList, ViewBag.Search);
+
+                return _userService.IsAdmin(_loginViewModel, userList) ? View(UserMessageConstants.adminIndex, userSearchModel) : View(UserMessageConstants.userIndex, userSearchModel);
             }
             catch (Exception ex)
             {

@@ -2,6 +2,7 @@
 using Interfleet.XIUserManagement.Models;
 using Interfleet.XaltAuthenticationAPI.Services;
 using Microsoft.AspNetCore.Authentication;
+using Interfleet.XIUserManagement.Constants;
 
 
 namespace Interfleet.XIUserManagement.Controllers
@@ -32,13 +33,13 @@ namespace Interfleet.XIUserManagement.Controllers
 
                     if (result != null)
                     {
-                        HttpContext.Session.SetString("username", user.UserName);
+                        HttpContext.Session.SetString(UserMessageConstants.searchValueOption1, user.UserName);
                         return RedirectToAction("Index", "Home");
                     }
                 }
                 else
                 {
-                    user.ErrorMessage = "Invalid User!";
+                    user.ErrorMessage =UserMessageConstants.invalidUserMessage;
                     return View("Index", user);
                 }
             }

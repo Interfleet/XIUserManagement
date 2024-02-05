@@ -1,4 +1,5 @@
 ﻿using Interfleet.XaltAuthenticationAPI.Models;
+using Interfleet.XIUserManagement.Constants;
 using Interfleet.XIUserManagement.Models;
 
 
@@ -8,7 +9,7 @@ namespace Interfleet.XaltAuthenticationAPI
     {
         bool IAuthorization.Authorize(Token token, string role)
         {
-            return role != "deny";
+            return role != UserMessageConstants.authorizeRoleValue;
         }
 
         public IEnumerable<Role> GetRolesForUser(string userName)

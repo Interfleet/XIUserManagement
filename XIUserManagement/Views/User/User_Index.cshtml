@@ -33,7 +33,7 @@
 }
 
 <br />
-<table class="table">
+<table class="table" style="border-color:white">
     <thead>
         <tr>
             <th>Name</th>
@@ -48,6 +48,9 @@
                 <td>@item.UserName</td>
                 <td>@item.Company</td>
                 <td>@item.Comments</td>
+                <td class="col-3 p-0 justify-content-end mt-1">
+                    <a class="btn btn-primary btn" href="View?userId=@item.UserId">View</a>
+                </td>
             </tr>
         }
     </tbody>

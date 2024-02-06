@@ -62,7 +62,28 @@ namespace Interfleet.XIUserManagement.Controllers
             }
             return View(UserMessageConstants.userIndex, paginatedUserList);
         }
-
+       
+        public IActionResult View(int userId)
+        {
+            Users user = new();
+            try
+            {
+                if (userId == 0)
+                {
+                    user.ErrorMessage = UserMessageConstants.userNotFoundMessage;
+                    return RedirectToAction(UserMessageConstants.userIndex);
+                }
+                TempData["UserId"] = userId;
+                user = _userService.GetUserByUserId(userId);
+                userList = _userService.CacheUserData(cacheKey);
+                return _userService.IsAdmin(_loginViewModel, userList) ? View(UserMessageConstants.adminView,user) : View(UserMessageConstants.userView,user);
+            }
+            catch (Exception ex)
+            {
+                user.ErrorMessage = ex.Message;
+                return View(user);
+            }
+        }
         public IActionResult Clear(string searchValue, string searchBy, int pg = 1)
         {
             searchValue = string.Empty;

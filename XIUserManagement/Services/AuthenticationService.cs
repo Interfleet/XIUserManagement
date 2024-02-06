@@ -62,12 +62,12 @@ namespace Interfleet.XaltAuthenticationAPI.Services
 
 
         //This method authenticates service request and returns user token associated with the user
-        //Also checks for invalid login attempts and locks the user if invalidloginattempts >= 4
+        //Also checks for invalid login attempts and locks the user if invalidloginattempts >= 5
         public Token Authenticate(LoginViewModel userRequest)
         {
             using var connection = _context.CreateConnection();
             var user = (userRequest.UserName != null ? _userService.GetUserByUserName(userRequest.UserName) : null) ?? throw new UserNotFoundException(string.Format(UserMessageConstants.userNotFoundMessage, userRequest.UserName));
-            if (user != null && user.InvalidLoginAttempts >= 4)
+            if (user != null && user.InvalidLoginAttempts >= 5)
             {
                 user.UserAccountDisabled = true;
                 _userService.UpdateUser(user);

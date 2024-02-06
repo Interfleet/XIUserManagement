@@ -18,6 +18,8 @@
         public const string cacheKey = "userList";
         public const string userIndex = "User_Index";
         public const string adminIndex = "Admin_Index";
+        public const string userView = "User_View";
+        public const string adminView = "Admin_View";
         public const string userListEmpty = "User list is empty!";
         public const string searchValueEntry = "Please enter search value";
         public const string searchValueOption1 = "username";

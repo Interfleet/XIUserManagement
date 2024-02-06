@@ -75,7 +75,7 @@ namespace Interfleet.XIUserManagement.Models
 
             if (!VerifyPassword(password, passwordSalt))
             {
-                if (InvalidLoginAttempts >= 4)
+                if (InvalidLoginAttempts >= 5)
                 {
                     UserAccountDisabled = true;
 

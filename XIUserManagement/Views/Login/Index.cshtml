@@ -82,12 +82,13 @@
     <div class="col-lg-12 col-lg-offset-3 text-center" asp-area="" asp-controller="Login" asp-action="Index"><h4>User Login</h4></div>
 
     <br />
-    @if (Model != null && Model.ErrorMessage != null && Model.ErrorMessage.Length > 0)
-    {
-        <div class="col-lg-12 col-lg-offset-3 text-center" role="alert">
-            <strong>@Model.ErrorMessage</strong>
-        </div>
-    }
+    <div class="col-lg-12 col-lg-offset-3 text-center">
+        @if (Model != null && Model.ErrorMessage != null && Model.ErrorMessage.Length > 0)
+        {
+            <strong class="text-danger">@Model.ErrorMessage</strong>
+        }
+    </div>
+    
 
     <form method="post">
         <div class="login">

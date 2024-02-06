@@ -27,7 +27,7 @@ namespace Interfleet.XIUserManagement.Controllers
         {
             try
             {
-                if (user.UserName != null && user.Password != null)
+                if (user.UserName != null && user.Password != null && (user.ErrorMessage == "" || user.ErrorMessage==null))
                 {
                     var result = _authenticationService.Authenticate(user);
 
@@ -39,7 +39,7 @@ namespace Interfleet.XIUserManagement.Controllers
                 }
                 else
                 {
-                    user.ErrorMessage =UserMessageConstants.invalidUserMessage;
+                    user.ErrorMessage =UserMessageConstants.userAccountDisabledMessage;
                     return View("Index", user);
                 }
             }

@@ -21,44 +21,44 @@ namespace Interfleet.XIUserManagement.Repositories
             var UserInfo = connection.Query<Users>(Constants.QueryConstants.GetAllUsersQuery).ToList();
             return UserInfo;
         }
-        public Users FindUserByName(string userName)
+        public Users? FindUserByName(string userName)
         {
-            using (var connection = _context.CreateConnection())
+            using var connection = _context.CreateConnection();
+            var user = connection.QueryFirstOrDefault<Users?>(Constants.QueryConstants.GetUserByUserNameQuery, new { userName });
+            return user ?? null;
+        }
+        public Users? GetUserById(int userId)
+        {
+            using var connection = _context.CreateConnection();
+            var user = connection.QueryFirstOrDefault<Users?>(Constants.QueryConstants.GetUserByUserIdQuery, new { userId });
+            return user ?? null;
+        }
+        public bool Save(Users? user)
+        {
+            using var connection = _context.CreateConnection();
+            if (user != null)
             {
-                var user = connection.QueryFirstOrDefault<Users>(Constants.QueryConstants.GetUserByUserNameQuery, new { userName });
-                return user;
+                user.PasswordSalt = _userInfo.GenerateSalt();
+                user.PasswordHash = _userInfo.HashPassword(user.Password, user.PasswordSalt);
+                user.Password = string.Empty;
+                user.Id = Guid.NewGuid();
             }
-        }
-        public Users GetUserById(int userId)
-        {
-            using var connection = _context.CreateConnection();
-            var user = connection.QueryFirstOrDefault<Users>(Constants.QueryConstants.GetUserByUserIdQuery, new { userId });
-            return user;
-        }
-        public bool Save(Users user)
-        {
-            using var connection = _context.CreateConnection();
-            user.PasswordSalt = _userInfo.GenerateSalt();
-            user.PasswordHash = _userInfo.HashPassword(user.Password, user.PasswordSalt);
-            user.Password = string.Empty;
-            user.Id = Guid.NewGuid();
-            
 
-            user = connection.QueryFirstOrDefault<Users>(Constants.QueryConstants.SaveUserQuery, new { user.UserName, user.Company, user.Comments, user.Id, user.PasswordHash, user.PasswordSalt,user.IsAdmin });
+            user = connection.QueryFirstOrDefault<Users?>(Constants.QueryConstants.SaveUserQuery, new { user.UserName, user.Company, user.Comments, user.Id, user.PasswordHash, user.PasswordSalt, user.IsAdmin, user.InvalidLoginAttempts, user.UserAccountDisabled });
             return true;
         }
 
-        public bool Update(Users user)
+        public bool Update(Users? user)
         {
             using var connection = _context.CreateConnection();
-            user = connection.QueryFirstOrDefault<Users>(Constants.QueryConstants.UpdateUserQuery, new { user.UserId, user.UserName, user.Company, user.Comments });
+            user = connection.QueryFirstOrDefault<Users?>(Constants.QueryConstants.UpdateUserQuery, new { user.UserId, user.UserName, user.Company, user.Comments, user.InvalidLoginAttempts, user.UserAccountDisabled });
             return true;
         }
 
-        public bool Delete(Users user)
+        public bool Delete(Users? user)
         {
             using var connection = _context.CreateConnection();
-            user = connection.QueryFirstOrDefault<Users>(Constants.QueryConstants.DeleteUserQuery, new { user.UserId });
+            user = connection.QueryFirstOrDefault<Users?>(Constants.QueryConstants.DeleteUserQuery, new { user.UserId });
             return true;
         }
     }

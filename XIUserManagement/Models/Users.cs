@@ -14,6 +14,8 @@ namespace Interfleet.XIUserManagement.Models
         private const int SaltLen = 128;
         public string ErrorMessage = "";
         public string SuccessMessage = "";
+        public string deleteUserMessage = UserMessageConstants.deleteUserMessage;
+        public string unlockUserMessage = UserMessageConstants.accountUnlockMessage;
         public Users()
         {
         }
@@ -30,7 +32,7 @@ namespace Interfleet.XIUserManagement.Models
 
         }
         public Users(Guid id, string userName, string password,
-                    string company, string comments, bool isAdmin, int userid)
+                    string company, string comments, bool isAdmin, int userid, int invalidLoginAttempts, bool userAccountDisabled)
         {
             if (userName == null) throw new ArgumentNullException("userName");
             if (password == null) throw new ArgumentNullException("password");
@@ -42,6 +44,8 @@ namespace Interfleet.XIUserManagement.Models
             Company = company;
             Comments = comments;
             IsAdmin = isAdmin;
+            InvalidLoginAttempts = invalidLoginAttempts;
+            UserAccountDisabled = userAccountDisabled;
         }
         [Pure]
         public byte[] GenerateSalt()
@@ -60,8 +64,9 @@ namespace Interfleet.XIUserManagement.Models
             Array.Copy(pwd, pwdPlusSalt, pwd.Length);
             Array.Copy(passwordSalt, 0, pwdPlusSalt, pwd.Length, SaltLen);
 
-            var hasher = new SHA512Managed();
-            return hasher.ComputeHash(pwdPlusSalt);
+            return SHA512.Create().ComputeHash(pwdPlusSalt);
+            //SHA512 hasher = new();
+            //return hasher.ComputeHash(pwdPlusSalt);
         }
         public bool VerifyPasswordWithLockout(string password, byte[] passwordSalt)
         {
@@ -70,17 +75,23 @@ namespace Interfleet.XIUserManagement.Models
 
             if (!VerifyPassword(password, passwordSalt))
             {
+                if (InvalidLoginAttempts >= 4)
+                {
+                    UserAccountDisabled = true;
+
+                }
+                else
+                    InvalidLoginAttempts += 1;
+
                 return false;
             }
 
+            InvalidLoginAttempts = 0;
             return true;
         }
-
         /// <summary>
         /// 	Verifies the password
-        /// </summary>
         /// <param name = "password">Password to verify</param>
-        /// <param name = "ip">The computer sending the request, possibly null.</param>
         public bool VerifyPassword(string password)
         {
 
@@ -90,11 +101,6 @@ namespace Interfleet.XIUserManagement.Models
             return true;
         }
 
-
-        /// <summary>
-        /// 	A boolean check. Don't use if you want the rules for locking out
-        /// 	users to run.
-        /// </summary>
         /// <param name = "password">UTF8-encoded Password to validate.</param>
         /// <returns>Whether the password was correctly validated, with respect to
         /// 	the password/username combo currently in use by the user.</returns>
@@ -119,8 +125,6 @@ namespace Interfleet.XIUserManagement.Models
             var bytes = Convert.FromBase64String(hashOfPassword);
             return bytes.SequenceEqual(PasswordHash);
         }
-
-
         protected internal byte[] PasswordHash { get; set; }
 
         protected internal byte[] PasswordSalt { get; set; }
@@ -153,6 +157,8 @@ namespace Interfleet.XIUserManagement.Models
         [StringLength(100, MinimumLength = 3)]
         public string? Comments { get; set; }
         public bool IsAdmin { get; set; }
+        public int InvalidLoginAttempts { get; set; }
+        public bool UserAccountDisabled { get; set; }
 
     }
 }

@@ -59,5 +59,35 @@ namespace Interfleet.XIUserManagement.Services
         {
             return _loginViewModel.UserName != null && userList.Where(u => u.UserName.ToUpper() == _loginViewModel.UserName.ToUpper()).Select(i => i.IsAdmin).FirstOrDefault();
         }
+        public void UnlockUser(Users user)
+        {
+            user.InvalidLoginAttempts = 0;
+            user.UserAccountDisabled = false;
+        }
+        public Users GetUserByUserId(int userId)
+        {
+            Users user = _userRepository.GetUserById(userId);
+            return user;
+        }
+        public Users? GetUserByUserName(string userName)
+        {
+            Users user = _userRepository.FindUserByName(userName);
+            return user;
+        }
+        public bool SaveUser(Users user)
+        {
+            bool userSaved = _userRepository.Save(user);
+            return userSaved;
+        }
+        public bool UpdateUser(Users user)
+        {
+            bool userUpdated = _userRepository.Update(user);
+            return userUpdated;
+        }
+        public bool DeleteUser(Users user)
+        {
+            bool userDeleted = _userRepository.Delete(user);
+            return userDeleted;
+        }
     }
 }

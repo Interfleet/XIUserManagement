@@ -67,14 +67,6 @@ namespace Interfleet.XaltAuthenticationAPI.Services
         {
             using var connection = _context.CreateConnection();
             var user = (userRequest.UserName != null ? _userService.GetUserByUserName(userRequest.UserName) : null) ?? throw new UserNotFoundException(string.Format(UserMessageConstants.userNotFoundMessage, userRequest.UserName));
-            
-            if (user != null && userRequest.Password!=null && VerifyPassword(userRequest.Password, user.PasswordSalt, user))
-            {
-                Authorize(new Token(userRequest.Id), QueryConstants.RequiredRoles);
-                return new Token(userRequest.Id);
-            }
-            if (user!=null && user.InvalidLoginAttempts > 0) { _userService.UpdateUser(user); }
-
             if (user != null && user.InvalidLoginAttempts >= 4)
             {
                 user.UserAccountDisabled = true;
@@ -82,6 +74,14 @@ namespace Interfleet.XaltAuthenticationAPI.Services
                 user.ErrorMessage = UserMessageConstants.userAccountDisabledMessage;
                 throw new UserBlockedException(string.Format(UserMessageConstants.userAccountDisabledMessage, userRequest.UserName));
             }
+            if (user != null && userRequest.Password!=null && VerifyPassword(userRequest.Password, user.PasswordSalt, user))
+            {
+                Authorize(new Token(userRequest.Id), QueryConstants.RequiredRoles);
+                return new Token(userRequest.Id);
+            }
+            if (user!=null && user.InvalidLoginAttempts > 0) { _userService.UpdateUser(user); }
+
+            
 
             throw new AuthorizationException(string.Format(UserMessageConstants.wrongPwdMessage, userRequest.UserName));
 

@@ -42,11 +42,11 @@ namespace Interfleet.XIUserManagement.Controllers
                 if (pg < 1) pg = 1;
                 if (searchValue != "" && searchValue != null && searchBy != "" && searchBy != null && searchBy.ToLower() == UserMessageConstants.searchValueOption1)
                 {
-                    userList = userList.Where(u => u.UserName.Contains(searchValue)).ToList();
+                    userList = userList.Where(u => u.UserName.ToLower().Contains(searchValue.ToLower())).ToList();
                 }
                 else if (searchValue != "" && searchValue != null && searchBy != "" && searchBy != null && searchBy.ToLower() == UserMessageConstants.searchValueOption2)
                 {
-                    userList = userList.Where(u => u.Company != null && u.Company.Contains(searchValue)).ToList();
+                    userList = userList.Where(u => u.Company != null && u.Company.ToLower().Contains(searchValue.ToLower())).ToList();
                 }
                 paginatedUserList = userList.Skip((pg - 1) * pageSize).Take(pageSize).ToList();
                 Pager SearchPager = new(userList.Count, pg, pageSize) { Action = "Index", Controller = "User", SearchValue = searchValue, SearchBy = searchBy };

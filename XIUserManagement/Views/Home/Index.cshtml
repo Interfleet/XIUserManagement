@@ -25,14 +25,11 @@
         .nav1 {
             margin-left: 820px;
             font-size: 15px;
-            font-family: cursive;
             color: dodgerblue;
         }
 
         .nav2 {
-            /*margin-left: 900px;*/
             font-size: 15px;
-            font-family: cursive;
             color: dodgerblue;
         }
 
@@ -40,15 +37,25 @@
             display: inline;
             margin-right: 20px;
             color: dodgerblue;
-            font-size: 15px;
-            font-family: cursive;
+            font-size: 16.5px;
         }
     </style>
+    <script>
+        function DisableBackButton() {
+            window.history.forward()
+        }
+        DisableBackButton();
+        window.onload = DisableBackButton;
+        window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
+        window.onload = function () { void (0) }
+    </script>
+
+
     <div class="col-lg-12 col-lg-offset-3 text-center" asp-area="" asp-controller="Home" asp-action="Index"><h4>Welcome @Context.Session.GetString("username") to User Management</h4></div>
     <div class="red col-lg-12 col-lg-offset-3 text-center">
 
         <a class="nav1" asp-area="" asp-controller="User" asp-action="Index">Users</a>
-        <a class="nav2" asp-area="" asp-controller="Login" asp-action="Login">Sign Out</a>
+        <a class="nav2" asp-area="" asp-controller="Login" asp-action="Logout">Sign Out</a>
 
     </div>
     <br />

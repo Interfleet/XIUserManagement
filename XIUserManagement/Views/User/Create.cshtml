@@ -18,10 +18,17 @@
         </div>
     </div>
     <div class="row-mb-3">
-        <label class="col-sm-3 col-form-label">Passowrd</label>
+        <label class="col-sm-3 col-form-label">Password</label>
         <div class="col-sm-3">
             @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
             <span asp-validation-for="Password"></span>
+        </div>
+    </div>
+    <div class="row-mb-3">
+        <label class="col-sm-3 col-form-label">Confirm Password</label>
+        <div class="col-sm-3">
+            @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control" })
+            <span asp-validation-for="ConfirmPassword"></span>
         </div>
     </div>
     <div class="row-mb-3">
@@ -60,3 +67,12 @@
         </div>
     </div>
 </form>
+<script>
+    function DisableBackButton() {
+        window.history.forward()
+    }
+    DisableBackButton();
+    window.onload = DisableBackButton;
+    window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
+    window.onload = function () { void (0) }
+</script>

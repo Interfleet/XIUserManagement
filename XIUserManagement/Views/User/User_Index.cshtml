@@ -1,10 +1,39 @@
-﻿@model List<Interfleet.XIUserManagement.Models.Users>
+﻿@using Interfleet.XIUserManagement.Models
+@using Microsoft.AspNetCore.Http;
+@model Tuple<List<Users>, Search>
+
 @{
+    ViewData["Title"] = "Index";
+
+    Pager pager = new Pager();
+    int pageNo = 0;
+    if (ViewBag.SearchPager != null)
+    {
+        pager = ViewBag.SearchPager;
+        pageNo = pager.CurrentPage;
+    }
+
 }
 <br />
-<h5>List of Users</h5>
-<a class='btn btn-primary btn-sm' href='/Home/Index'>Home</a>
-<table class="table">
+<div class="container btn-group" border-radius: 25px; height:45px;">
+    <div class="col-4 p-0 justify-content-end mt-1">
+        <h5>List of Users</h5>
+        <a class='btn btn-primary btn-sm' href='/Home/Index'>Home</a>
+    </div>
+</div>
+<br />
+<br />
+
+<partial name="_pager" model="@pager" />
+
+@if (Model.Item2 != null && Model.Item2.ErrorMessage != null && Model.Item2.ErrorMessage.Length > 0)
+{
+    <strong class="text-danger">@Model.Item2.ErrorMessage</strong>
+
+}
+
+<br />
+<table class="table" style="border-color:white">
     <thead>
         <tr>
             <th>Name</th>
@@ -13,13 +42,25 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Item1)
         {
             <tr>
                 <td>@item.UserName</td>
                 <td>@item.Company</td>
                 <td>@item.Comments</td>
+                <td class="col-3 p-0 justify-content-end mt-1">
+                    <a class="btn btn-primary btn" href="View?userId=@item.UserId">View</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
+<script>
+    function DisableBackButton() {
+        window.history.forward()
+    }
+    DisableBackButton();
+    window.onload = DisableBackButton;
+    window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
+    window.onload = function () { void (0) }
+</script>

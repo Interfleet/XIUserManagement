@@ -3,7 +3,7 @@
 }
 <br>
 
-@if (Model.ErrorMessage.Length > 0)
+@if (Model != null && Model.ErrorMessage != null && Model.ErrorMessage.Length > 0)
 {
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <strong>@Model.ErrorMessage</strong>
@@ -12,7 +12,7 @@
 }
 <form method="post">
     <input type="hidden" class="form-control" name="userid" asp-for="UserId" value="@Model.UserId">
-            
+
     <div class="row-mb-3">
         <label class="col-sm-3 col-form-label">UserName</label>
         <div class="col-sm-3">
@@ -21,8 +21,8 @@
         </div>
     </div>
     <div class="row-mb-3">
-       <div class="col-sm-3">
-            <input type="hidden" class="form-control" name="passowrd" asp-for="Password" value="@Model.Password" readonly> 
+        <div class="col-sm-3">
+            <input type="hidden" class="form-control" name="passowrd" asp-for="Password" value="@Model.Password" readonly>
             <span asp-validation-for="Password"></span>
         </div>
     </div>
@@ -40,11 +40,21 @@
             <span asp-validation-for="Comments"></span>
         </div>
     </div>
-
+    <br />
     <div class="row-cols-md-5">
         <div>
             <button asp-action="Edit" asp-controller="User" class="btn btn-success">Update</button>
             <a class="btn btn-outline-primary" asp-controller="User" asp-action="Index" role="button">Cancel</a>
         </div>
     </div>
-</form>
+    <br />
+  </form>
+<script>
+    function DisableBackButton() {
+        window.history.forward()
+    }
+    DisableBackButton();
+    window.onload = DisableBackButton;
+    window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
+    window.onload = function () { void (0) }
+</script>

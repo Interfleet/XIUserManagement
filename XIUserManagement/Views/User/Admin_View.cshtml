@@ -3,13 +3,9 @@
 }
 <br>
 
-@if (Model != null && Model.ErrorMessage != null && Model.ErrorMessage.Length > 0)
-{
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>@Model.ErrorMessage</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
+<div class="red col-lg-12 col-lg-offset-3 text-center">
+    <h3>User details</h3>
+</div>
 <form method="post">
     <input type="hidden" class="form-control" name="userId" asp-for="UserId" value="@Model.UserId">
     <div class="row-mb-3">
@@ -17,12 +13,6 @@
         <div class="col-sm-3">
             <input type="text" class="form-control" name="username" asp-for="UserName" value="@Model.UserName" readonly>
             <span asp-validation-for="UserName"></span>
-        </div>
-    </div>
-    <div class="row-mb-3">
-        <div class="col-sm-3">
-            <input type="hidden" class="form-control" name="passowrd" asp-for="Password" value="@Model.Password" readonly>
-            <span asp-validation-for="Password"></span>
         </div>
     </div>
     <div class="row-mb-3">
@@ -42,10 +32,21 @@
     <br />
     <div class="row-cols-md-5">
         <div>
-            <button asp-action="Delete" asp-controller="User" class="btn btn-success" onclick="return confirm('@Model.deleteUserMessage')">Delete</button>
-            <a class="btn btn-outline-primary" asp-controller="User" asp-action="Index" role="button">Cancel</a>
+            <a class="btn btn-success" asp-controller="User" asp-action="Index" role="button">Go back</a>
+            @if (Model.UserAccountDisabled)
+            {
+                <a class="btn btn-outline-primary" asp-controller="User" asp-action="UnlockUser" role="button" onclick="return confirm('@Model.unlockUserMessage')">Unlock user</a>
+            }
         </div>
+        @if (Model != null && Model.SuccessMessage != null && Model.SuccessMessage.Length > 0)
+        {
+            <div class="success">
+                <strong>@Model.SuccessMessage</strong>
+            </div>
+        }
     </div>
+    <br />
+    
 </form>
 <script>
     function DisableBackButton() {

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Interfleet.XIUserManagement.Models;
 using Interfleet.XaltAuthenticationAPI.Services;
+using Microsoft.AspNetCore.Authentication;
+using Interfleet.XIUserManagement.Constants;
 
 
 namespace Interfleet.XIUserManagement.Controllers
@@ -8,8 +10,8 @@ namespace Interfleet.XIUserManagement.Controllers
     public class LoginController : Controller
     {
         private readonly ILogger<LoginController> _logger;
-        private readonly AuthenticationService _authenticationService;
-        public LoginController(ILogger<LoginController> logger, AuthenticationService authenticationService)
+        private readonly XaltAuthenticationAPI.Services.AuthenticationService _authenticationService;
+        public LoginController(ILogger<LoginController> logger, XaltAuthenticationAPI.Services.AuthenticationService authenticationService)
         {
             _logger = logger;
             _authenticationService = authenticationService;
@@ -25,19 +27,19 @@ namespace Interfleet.XIUserManagement.Controllers
         {
             try
             {
-                if (user.UserName != null && user.Password != null)
+                if (user.UserName != null && user.Password != null && (user.ErrorMessage == "" || user.ErrorMessage==null))
                 {
                     var result = _authenticationService.Authenticate(user);
 
                     if (result != null)
                     {
-                        HttpContext.Session.SetString("username", user.UserName);
+                        HttpContext.Session.SetString(UserMessageConstants.searchValueOption1, user.UserName);
                         return RedirectToAction("Index", "Home");
                     }
                 }
                 else
                 {
-                    user.ErrorMessage = "Invalid User!";
+                    user.ErrorMessage =UserMessageConstants.userAccountDisabledMessage;
                     return View("Index", user);
                 }
             }
@@ -47,6 +49,14 @@ namespace Interfleet.XIUserManagement.Controllers
                 return View("Index",user);
             }
             return View("Index");
+        }
+        [HttpGet]
+        [Route("Logout")]
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync();
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
         }
 
 

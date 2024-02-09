@@ -11,6 +11,7 @@ namespace Interfleet.XIUserManagement.Repositories
         Users GetUserById(int userId);
         bool Save(Users user);
         bool Update(Users user);
+        bool ResetPassword(ResetPasswordModel? resetPasswordModel);
         bool Delete(Users user);
     }
 }

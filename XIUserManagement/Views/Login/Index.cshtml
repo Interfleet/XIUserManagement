@@ -88,7 +88,7 @@
             <strong class="text-danger">@Model.ErrorMessage</strong>
         }
     </div>
-    
+
 
     <form method="post">
         <div class="login">
@@ -104,6 +104,11 @@
         <div class="col-lg-12 col-lg-offset-3 text-center">
             <button asp-action="Login" asp-controller="Login" class="btn btn-primary">Login</button>
             <a class="btn btn-primary btn" href="/">Cancel</a>
+        </div>
+        <br />
+        <div class="col-lg-14 col-lg-offset-6 text-center">
+            <label for="uname"><b>Forgot password?</b></label>
+            <a class="nav1" asp-area="" asp-controller="Login" asp-action="Reset">Reset here</a>
         </div>
     </form>
 </body>

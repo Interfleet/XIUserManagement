@@ -8,9 +8,10 @@
         public const string modelInvalidDataMessage = "Model data is invalid!";
         public const string dataNotSavedMessage = "Unable to save user details!";
         public const string dataSavedMessage = "User details saved successfully!";
-        public const string userNotFoundMessage = "User not found with name {0}";
+        public const string userNotFoundMessage = "User not found!";
         public const string dataNotUpdatedMessage = "Unable to update user details!";
-        public const string dataUpdatedMessage = "User details saved successfully!";
+        public const string dataUpdatedMessage = "User details uodated successfully!";
+        public const string passwordResetMessage = "Your password has been reset successfully!";
         public const string dataNotDeletedMessage = "Unable to delete user details!";
         public const string dataDeletedMessage = "User details deleted successfully!";
         public const string userExistsMessage = "User already exists. Please enter some other username";

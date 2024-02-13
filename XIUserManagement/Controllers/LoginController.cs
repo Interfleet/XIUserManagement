@@ -3,6 +3,7 @@ using Interfleet.XIUserManagement.Models;
 using Interfleet.XaltAuthenticationAPI.Services;
 using Microsoft.AspNetCore.Authentication;
 using Interfleet.XIUserManagement.Constants;
+using Interfleet.XIUserManagement.Services;
 
 
 namespace Interfleet.XIUserManagement.Controllers
@@ -11,10 +12,12 @@ namespace Interfleet.XIUserManagement.Controllers
     {
         private readonly ILogger<LoginController> _logger;
         private readonly XaltAuthenticationAPI.Services.AuthenticationService _authenticationService;
-        public LoginController(ILogger<LoginController> logger, XaltAuthenticationAPI.Services.AuthenticationService authenticationService)
+        private readonly UserService _userService;
+        public LoginController(ILogger<LoginController> logger, XaltAuthenticationAPI.Services.AuthenticationService authenticationService, UserService userService)
         {
             _logger = logger;
             _authenticationService = authenticationService;
+            _userService = userService;
         }
         [HttpGet]
         public IActionResult Login()
@@ -27,7 +30,7 @@ namespace Interfleet.XIUserManagement.Controllers
         {
             try
             {
-                if (user.UserName != null && user.Password != null && (user.ErrorMessage == "" || user.ErrorMessage==null))
+                if (user.UserName != null && user.Password != null && (user.ErrorMessage == "" || user.ErrorMessage == null))
                 {
                     var result = _authenticationService.Authenticate(user);
 
@@ -39,14 +42,14 @@ namespace Interfleet.XIUserManagement.Controllers
                 }
                 else
                 {
-                    user.ErrorMessage =UserMessageConstants.userAccountDisabledMessage;
+                    user.ErrorMessage = UserMessageConstants.userAccountDisabledMessage;
                     return View("Index", user);
                 }
             }
             catch (Exception ex)
             {
                 user.ErrorMessage = ex.Message;
-                return View("Index",user);
+                return View("Index", user);
             }
             return View("Index");
         }
@@ -58,7 +61,69 @@ namespace Interfleet.XIUserManagement.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
+        [HttpGet]
+        public IActionResult Reset()
+        {
+            try
+            {
+                return View("Reset");
+            }
+            catch (Exception ex)
+            {
 
+                return View(ex.Message);
+            }
+        }
+        public IActionResult ResetPassword(string userName)
+        {
+            _ = new Users();
+            ResetPasswordModel? resetPasswordModel = new();
+            Users? user = _userService.GetUserByUserName(userName);
+            try
+            {
+                if (user == null)
+                {
+                    ModelState.AddModelError("UserName",UserMessageConstants.userNotFoundMessage);
+                    return View("Reset", user);
+                }
+                user = _userService.GetUserByUserName(userName);
+                resetPasswordModel.UserId = user != null ? user.UserId : 0;
+                return View("ResetPassword", resetPasswordModel);
+            }
+            catch (Exception ex)
+            {
+                user.ErrorMessage = ex.Message;
+                return View(user);
+            }
+        }
+        public IActionResult Submit(ResetPasswordModel resetPasswordModel)
+        {
+            try
+            {
+                if (resetPasswordModel != null && resetPasswordModel.UserId == 0)
+                {
+                    resetPasswordModel.ErrorMessage = UserMessageConstants.userNotFoundMessage;
+                    return RedirectToAction("Login");
+                }
+                if (!ModelState.IsValid)
+                {
+                    return View("ResetPassword", resetPasswordModel);
+                }
+                if (resetPasswordModel != null)
+                {
+                    bool result = _userService.ResetPassword(resetPasswordModel);
+                    resetPasswordModel.SuccessMessage = UserMessageConstants.passwordResetMessage;
+                    return View("ResetPassword", resetPasswordModel);
+                }
+
+                return View("ResetPassword", resetPasswordModel);
+            }
+            catch (Exception ex)
+            {
+                resetPasswordModel.ErrorMessage = ex.Message;
+                return View(resetPasswordModel);
+            }
+        }
 
     }
 }

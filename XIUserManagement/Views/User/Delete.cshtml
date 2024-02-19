@@ -1,49 +1,51 @@
-﻿@model Interfleet.XIUserManagement.Models.Users;
+﻿@using Interfleet.XIUserManagement.Models
+@using Microsoft.AspNetCore.Http;
+@model Tuple<Users, Search,Pager>
 @{
 }
 <br>
 
-@if (Model != null && Model.ErrorMessage != null && Model.ErrorMessage.Length > 0)
+@if (Model != null && Model.Item1.ErrorMessage != null && Model.Item1.ErrorMessage.Length > 0)
 {
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>@Model.ErrorMessage</strong>
+        <strong>@Model.Item1.ErrorMessage</strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 <form method="post">
-    <input type="hidden" class="form-control" name="userId" asp-for="UserId" value="@Model.UserId">
+    <input type="hidden" class="form-control" name="userId" asp-for="Item1.UserId" value="@Model.Item1.UserId">
     <div class="row-mb-3">
         <label class="col-sm-3 col-form-label">UserName</label>
         <div class="col-sm-3">
-            <input type="text" class="form-control" name="username" asp-for="UserName" value="@Model.UserName" readonly>
-            <span asp-validation-for="UserName"></span>
+            <input type="text" class="form-control" name="username" asp-for="Item1.UserName" value="@Model.Item1.UserName" readonly>
+            <span asp-validation-for="Item1.UserName"></span>
         </div>
     </div>
     <div class="row-mb-3">
         <div class="col-sm-3">
-            <input type="hidden" class="form-control" name="passowrd" asp-for="Password" value="@Model.Password" readonly>
-            <span asp-validation-for="Password"></span>
+            <input type="hidden" class="form-control" name="passowrd" asp-for="Item1.Password" value="@Model.Item1.Password" readonly>
+            <span asp-validation-for="Item1.Password"></span>
         </div>
     </div>
     <div class="row-mb-3">
         <label class="col-sm-3 col-form-label">Company</label>
         <div class="col-sm-3">
-            <input type="text" class="form-control" name="company" asp-for="Company" value="@Model.Company" readonly>
-            <span asp-validation-for="Company"></span>
+            <input type="text" class="form-control" name="company" asp-for="Item1.Company" value="@Model.Item1.Company" readonly>
+            <span asp-validation-for="Item1.Company"></span>
         </div>
     </div>
     <div class="row-mb-3">
         <label class="col-sm-3 col-form-label">Comments</label>
         <div class="col-sm-3">
-            <input type="text" class="form-control" name="comments" asp-for="Comments" value="@Model.Comments" readonly>
-            <span asp-validation-for="Comments"></span>
+            <input type="text" class="form-control" name="comments" asp-for="Item1.Comments" value="@Model.Item1.Comments" readonly>
+            <span asp-validation-for="Item1.Comments"></span>
         </div>
     </div>
     <br />
     <div class="row-cols-md-5">
         <div>
-            <button asp-action="Delete" asp-controller="User" class="btn btn-success" onclick="return confirm('@Model.deleteUserMessage')">Delete</button>
-            <a class="btn btn-outline-primary" asp-controller="User" asp-action="Index" role="button">Cancel</a>
+            <button asp-action="Delete" asp-controller="User" class="btn btn-success" asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize" onclick="return confirm('@Model.Item1.deleteUserMessage')">Delete</button>
+            <a class="btn btn-outline-primary" asp-controller="User" asp-action="Index" role="button" asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize">Cancel</a>
         </div>
     </div>
 </form>

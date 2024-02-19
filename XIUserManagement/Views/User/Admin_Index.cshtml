@@ -1,6 +1,6 @@
 ﻿@using Interfleet.XIUserManagement.Models
 @using Microsoft.AspNetCore.Http;
-@model Tuple<List<Users>, Search>
+@model Tuple<List<Users>, Search,Pager>
 
 @{
     ViewData["Title"] = "Index";
@@ -19,7 +19,7 @@
 <div class="container btn-group" border-radius: 25px; height:45px;">
     <div class="col-4 p-0 justify-content-end mt-1">
         <h5>List of Users</h5>
-        <a class='btn btn-primary btn-sm' href='Create'>New user</a>
+        <a class='btn btn-primary btn-sm' asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize" asp-controller="User" asp-action="Create">New user</a>
         <a class='btn btn-primary btn-sm' href='/Home/Index'>Home</a>
     </div>
 </div>
@@ -52,9 +52,9 @@
                 <td>@item.Company</td>
                 <td>@item.Comments</td>
                 <td class="col-3 p-0 justify-content-end mt-1">
-                    <a class="btn btn-primary btn" href="View?userId=@item.UserId">View</a>
-                    <a class="btn btn-primary btn" href="Edit?userId=@item.UserId">Edit</a>
-                    <a class="btn btn-primary btn" href="Delete?userId=@item.UserId">Delete</a>
+                    <a class="btn btn-primary btn" asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize" asp-controller="User" asp-action="View" asp-route-userId="@item.UserId">View</a>
+                    <a class="btn btn-primary btn" asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize" asp-controller="User" asp-action="Edit" asp-route-userId="@item.UserId">Edit</a>
+                    <a class="btn btn-primary btn" asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize" asp-controller="User" asp-action="Delete" asp-route-userId="@item.UserId">Delete</a>
                 </td>
             </tr>
         }

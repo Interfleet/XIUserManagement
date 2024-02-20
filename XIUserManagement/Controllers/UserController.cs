@@ -32,7 +32,6 @@ namespace Interfleet.XIUserManagement.Controllers
             user = _userService.GetUserByUserId(userId);
             userList = _userService.CacheUserData(cacheKey);
             isAdmin = _userService.IsAdmin(_loginViewModel, userList);
-            //search.IsSelected = true;
             searchBy ??= (new Search().SearchBy ?? null);
             if (pg < 1) pg = 1;
             if (searchValue != "" && searchValue != null && searchBy != "" && searchBy != null && searchBy.ToLower() == UserMessageConstants.searchValueOption1)

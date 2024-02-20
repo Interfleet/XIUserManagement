@@ -24,6 +24,7 @@
         public const string index = "Index";
         public const string user = "user";
         public const string userId = "userId";
+        public const string userName = "UserName";
         public const string create = "create";
         public const string edit = "edit";
         public const string delete = "delete";
@@ -40,7 +41,7 @@
         public const string invalidUserMessage = "Invalid User!";
         public const string authorizeRoleValue = "deny";
         public const string accountUnlockMessage = "User account has been locked,are you sure you want to unlock the account?";
-        public const string accountUnlockSuccessMessage = "User account has been unlocked !!";
+        public const string accountUnlockSuccessMessage = "Account has been unlocked for ";
         public const string deleteUserMessage = "Are you sure you want to delete this record?";
     }
 }

@@ -1,18 +1,20 @@
-﻿namespace Interfleet.XIUserManagement.Models
+﻿using Interfleet.XIUserManagement.Constants;
+
+namespace Interfleet.XIUserManagement.Models
 {
     public class Pager
     {
         public Pager()
         {
         }
-        public string SearchValue { get; set; } = "";
-		public string SearchBy { get; set; } = "";
+        public string SearchValue { get; set; } 
+		public string SearchBy { get; set; } 
 		public string Controller { get; set; } = "";
-        public string Action { get; set; } = "Index";
+        public string Action { get; set; } = UserMessageConstants.index;
 
         public int TotalItems { get; private set; }
         public int CurrentPage { get; private set; }
-        public int PageSize { get; private set; }
+        public int PageSize { get; set; }
         public int TotalPages { get; private set; }
         public int StartPage { get; private set; }
         public int EndPage { get; private set; }

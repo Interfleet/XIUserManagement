@@ -7,10 +7,8 @@
                     <tr>
                         <td>
                             <span><b>Serach by:</b></span>
-                            @Html.RadioButton("searchBy", "UserName", true)
-                            <text>User Name</text>
-                            @Html.RadioButton("searchBy", "Company", false)
-                            <text>Company</text>
+                            @Html.RadioButton("SearchBy", "UserName", Model.SearchBy == "UserName", new { id = "userName", data_attr = "userName" }) UserName
+                            @Html.RadioButton("SearchBy", "Company", Model.SearchBy == "Company", new { id = "company", data_attr = "company" }) Company
                         </td>
                     </tr>
                     <tr>

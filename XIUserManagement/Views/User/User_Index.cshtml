@@ -36,8 +36,8 @@
 <table class="table" style="border-color:white">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Company</th>
+            <th><a class="text-dark" asp-controller="User" asp-action="Index" asp-route-sortOrder=@ViewData[Search.sortOrderUserNameParam] asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize">Name</a></th>
+            <th><a class="text-dark" asp-controller="User" asp-action="Index" asp-route-sortOrder=@ViewData[Search.sortOrderCompanyParam] asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize">Company</a></th>
             <th>Comments</th>
         </tr>
     </thead>

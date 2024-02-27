@@ -6,12 +6,15 @@ namespace Interfleet.XIUserManagement.Models
 {
     public class Search
     {
+        public const string sortOrderUserNameParam = UserMessageConstants.sortOrderUserNameParam;
+        public const string sortOrderCompanyParam = UserMessageConstants.sortOrderCompanyParam;
         public Search() {
             SearchBy = UserMessageConstants.userName;
+            SearchValue=string.Empty;
         }
         public Search(string searchValue, string searchBy)
         {
-            SearchValue = searchValue;
+            SearchValue = string.Empty;
             SearchBy = searchBy;
         }
         public string SelectedOption { get; set; }

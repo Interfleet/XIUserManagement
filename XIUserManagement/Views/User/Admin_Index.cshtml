@@ -34,14 +34,43 @@
     <strong class="text-danger">@Model.Item2.ErrorMessage</strong>
 
 }
+<style>
+    .users {
+        table-layout: fixed;
+        width: 100%;
+        white-space: nowrap;
+    }
 
+        .users td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    /* Column widths are based on these cells */
+    .row-ID {
+        width: 10%;
+    }
+
+    .row-name {
+        width: 40%;
+    }
+
+    .row-company {
+        width: 30%;
+    }
+
+    .row-comments {
+        width: 20%;
+    }
+</style>
 <br />
-<table class="table" style="border-color:white">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Company</th>
-            <th>Comments</th>
+<table class="users" style="border-color:white">
+    <thead class="col-4 p-0 justify-content-end mt-1">
+        <tr class="col-4 p-0 justify-content-end mt-1">
+            <th><a class="row-2 row-name text-dark" asp-controller="User" asp-action="Index" asp-route-sortOrder=@ViewData[Search.sortOrderUserNameParam] asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize">Name</a></th>
+            <th><a class="row-3 row-company text-dark" asp-controller="User" asp-action="Index" asp-route-sortOrder=@ViewData[Search.sortOrderCompanyParam] asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize">Company</a></th>
+            <th class="row-4 row-comments text-dark">Comments</th>
         </tr>
     </thead>
     <tbody>
@@ -51,7 +80,7 @@
                 <td>@item.UserName</td>
                 <td>@item.Company</td>
                 <td>@item.Comments</td>
-                <td class="col-3 p-0 justify-content-end mt-1">
+                <td>
                     <a class="btn btn-primary btn" asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize" asp-controller="User" asp-action="View" asp-route-userId="@item.UserId">View</a>
                     <a class="btn btn-primary btn" asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize" asp-controller="User" asp-action="Edit" asp-route-userId="@item.UserId">Edit</a>
                     <a class="btn btn-primary btn" asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize" asp-controller="User" asp-action="Delete" asp-route-userId="@item.UserId">Delete</a>

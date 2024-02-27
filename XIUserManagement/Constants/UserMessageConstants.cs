@@ -34,6 +34,11 @@
         public const string searchValueOption2 = "company";
         public const string searchBy = "searchBy";
         public const string searchValue = "searchValue";
+        public const string sortOrderUserNameDesc = "username_desc";
+        public const string sortOrderCompanyAsc = "company_asc";
+        public const string sortOrderCompanyDesc = "company_desc";
+        public const string sortOrderUserNameParam = "UserNameSortParam";
+        public const string sortOrderCompanyParam = "CompanySortParam";
         public const string createUserMessage = "First create the user before trying to login with that user.";
         public const string errorInLoginMessage = "Can not login with a non existing user";
         public const string wrongPwdMessage = "You have entered an invalid password!!";

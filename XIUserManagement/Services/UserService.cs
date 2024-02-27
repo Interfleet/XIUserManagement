@@ -2,6 +2,7 @@
 using Interfleet.XIUserManagement.Models;
 using Interfleet.XIUserManagement.Repositories;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Interfleet.XIUserManagement.Services
@@ -54,6 +55,25 @@ namespace Interfleet.XIUserManagement.Services
             }
 
             return pagesSizes;
+        }
+        public List<Users> SortUserData(string sortOrder,List<Users> userList)
+        {
+            switch (sortOrder)
+            {
+                case UserMessageConstants.sortOrderUserNameDesc:
+                    userList = userList.OrderByDescending(u => u.UserName).ToList();
+                    break;
+                case UserMessageConstants.sortOrderCompanyAsc:
+                    userList = userList.OrderBy(u => u.Company).ToList();
+                    break;
+                case UserMessageConstants.sortOrderCompanyDesc:
+                    userList = userList.OrderByDescending(u => u.Company).ToList();
+                    break;
+                default:
+                    userList = userList.OrderBy(u => u.UserName).ToList();
+                    break;
+            }
+            return userList;
         }
         public bool IsAdmin(LoginViewModel _loginViewModel, List<Users> userList)
         {

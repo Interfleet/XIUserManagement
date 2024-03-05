@@ -41,7 +41,7 @@ namespace Interfleet.XaltAuthenticationAPI.Services
             if (user != null && userName == user.UserName)
             {
                 ClearData(user);
-                throw new ApplicationException(UserMessageConstants.userExistsMessage);
+                return false;
             }
 
             return true;

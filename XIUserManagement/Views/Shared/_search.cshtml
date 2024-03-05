@@ -1,0 +1,58 @@
+﻿@using Interfleet.XIUserManagement.Models
+<style>
+    .btn-user {
+        color: white;
+        background-color: ##0d6efd;
+        border-color: blue;
+    }
+</style>
+<div class="container btn-group" border-radius: 25px; height:30px;">
+    <div class="col-4 p-0 justify-content-start mt-1">
+        <form asp-controller="@Model.Controller" asp-action="@Model.Action">
+            <span class="btn-group">
+                <table>
+                    <tr>
+                        <td>
+                            <span><b>Serach by:</b></span>
+                            @Html.RadioButton("SearchBy", "UserName", Model.SearchBy == "UserName", new { id = "userName", data_attr = "userName" }) UserName
+                            @Html.RadioButton("SearchBy", "Company", Model.SearchBy == "Company", new { id = "company", data_attr = "company" }) Company
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" class="form-control" name="searchValue" placeholder="Enter search value" value="@Model.SearchValue">
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                            <input class="btn btn-user" type="submit" value="Search" />
+                            <input class="btn btn-user" type="submit" asp-controller="User" asp-action="Clear" value="Clear" />
+                        </td>
+                    </tr>
+                </table>
+
+                <input name="pageSize" type="hidden" value="@Model.PageSize" />
+            </span>
+        </form>
+    </div>
+</div>
+
+<div class="clearfix">
+    <p></p>
+</div>
+
+<script>
+    function ChangePageSize(obj, searchtext, searchby) {
+        window.location.href = "/@Model.Controller/@Model.Action" + "?pageSize=" + obj.value + "&SearchValue=" + searchtext + "&SearchBy=" + searchby;
+    }
+</script>
+<script>
+    function DisableBackButton() {
+        window.history.forward()
+    }
+    DisableBackButton();
+    window.onload = DisableBackButton;
+    window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
+    window.onload = function () { void (0) }
+</script>

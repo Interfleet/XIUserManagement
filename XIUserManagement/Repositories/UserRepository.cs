@@ -51,7 +51,7 @@ namespace Interfleet.XIUserManagement.Repositories
         public bool Update(Users? user)
         {
             using var connection = _context.CreateConnection();
-            user = connection.QueryFirstOrDefault<Users?>(Constants.QueryConstants.UpdateUserQuery, new { user.UserId, user.UserName, user.Company, user.Comments, user.InvalidLoginAttempts, user.UserAccountDisabled });
+            user = connection.QueryFirstOrDefault<Users?>(Constants.QueryConstants.UpdateUserQuery, new { user.UserId, user.UserName, user.Company, user.Comments,user.IsAdmin, user.InvalidLoginAttempts, user.UserAccountDisabled });
             return true;
         }
         public bool ResetPassword(ResetPasswordModel? resetPasswordModel)

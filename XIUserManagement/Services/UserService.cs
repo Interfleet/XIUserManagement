@@ -28,7 +28,7 @@ namespace Interfleet.XIUserManagement.Services
                 //setting up cache options
                 var cacheExpiryOptions = new MemoryCacheEntryOptions
                 {
-                    AbsoluteExpiration = DateTime.Now.AddSeconds(5),
+                    AbsoluteExpiration = DateTime.Now.AddSeconds(3),
                     Priority = CacheItemPriority.High,
                     SlidingExpiration = TimeSpan.FromSeconds(10)
                 };

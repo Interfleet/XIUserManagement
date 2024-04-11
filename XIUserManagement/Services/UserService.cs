@@ -9,33 +9,26 @@ namespace Interfleet.XIUserManagement.Services
 {
     public class UserService
     {
-        private readonly IMemoryCache _memoryCache;
         private readonly IUserRepository _userRepository;
-        public UserService(IMemoryCache memoryCache, IUserRepository userRepository)
+        public UserService(IUserRepository userRepository)
         {
-            _memoryCache = memoryCache;
             _userRepository = userRepository;
         }
-
-        //This method caches user data
-        public List<Users> CacheUserData(string? cacheKey)
+        public List<Users> GetUserData()
         {
-            if (!_memoryCache.TryGetValue(cacheKey, out List<Users> lstUsers))
+            return _userRepository.GetUsers();
+        }
+        //This method clears user data
+        public void ClearUserData(Users user)
+        {
+            user.UserName=string.Empty;
+            if (user.SuccessMessage.Contains("saved"))
             {
-                //calling the server
-                lstUsers = _userRepository.GetUsers();
-
-                //setting up cache options
-                var cacheExpiryOptions = new MemoryCacheEntryOptions
-                {
-                    AbsoluteExpiration = DateTime.Now.AddSeconds(3),
-                    Priority = CacheItemPriority.High,
-                    SlidingExpiration = TimeSpan.FromSeconds(10)
-                };
-                //setting cache entries
-                _memoryCache.Set(cacheKey, lstUsers, cacheExpiryOptions);
+                user.Password = string.Empty;
+                user.ConfirmPassword = string.Empty;
             }
-            return lstUsers;
+            user.Company=string.Empty;
+            user.Comments=string.Empty;
         }
         public List<SelectListItem> GetPageSizes(int selectedPageSize = 5)
         {
@@ -56,7 +49,7 @@ namespace Interfleet.XIUserManagement.Services
 
             return pagesSizes;
         }
-        public List<Users> SortUserData(string sortOrder,List<Users> userList)
+        public List<Users> SortUserData(string sortOrder, List<Users> userList)
         {
             switch (sortOrder)
             {

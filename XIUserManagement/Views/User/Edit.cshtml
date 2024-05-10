@@ -50,10 +50,14 @@
         </div>
     </div>
     <br />
-    <div class="row-cols-md-5">
+    <div class="row-cols-md-2">
         <div>
             <button asp-action="Edit" asp-controller="User" class="btn btn-user btn">Update</button>
             <a class="btn btn-user btn" asp-controller="User" asp-action="Index" role="button">Cancel</a>
+        </div>
+        <div>
+            Do you want to Change password?@* <a class="nav1" asp-area="" asp-controller="ChangePassword" asp-action="ChangePassword">Click here</a> *@
+            <button asp-action="ChangePassword" asp-controller="ChangePassword" class="btn btn-outline-primary">Click here</button>
         </div>
     </div>
     <br />

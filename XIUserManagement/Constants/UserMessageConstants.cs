@@ -3,8 +3,8 @@
     public class UserMessageConstants
     {
         public const string passwordComparatorMessage = "Password and confirm password do not match, please try again !";
-        public const string passwordValidatorMessage = "Password must be a minimum of 8 characters and a combination of one uppercase,one lowercase,one special character and one digit";
-        public const string passwordRegularExpression = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$^+=!*()@%&]).{8,}$";
+        public const string passwordValidatorMessage = "Password must be a minimum of 10 characters and a combination of one uppercase,one lowercase and one digit";
+        public const string passwordRegularExpression = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{10,}$";
         public const string modelInvalidDataMessage = "Model data is invalid!";
         public const string dataNotSavedMessage = "Unable to save user details!";
         public const string dataSavedMessage = "Details saved successfully!";
@@ -12,6 +12,7 @@
         public const string dataNotUpdatedMessage = "Unable to update user details!";
         public const string dataUpdatedMessage = "Details updated successfully!";
         public const string passwordResetMessage = "Your password has been reset successfully!";
+        public const string passwordChangedMessage = "Your password has been changed successfully!";
         public const string dataNotDeletedMessage = "Unable to delete user details!";
         public const string dataDeletedMessage = "Details deleted successfully!";
         public const string userExistsMessage = "User already exists. Please enter some other username";
@@ -44,6 +45,7 @@
         public const string wrongPwdMessage = "You have entered an invalid password!!";
         public const string authorizationFailedMessage = "Authorization failed. Required role {0}";
         public const string invalidUserMessage = "Invalid User!";
+        public const string invalidPwdMessage = "Invalid Password!";
         public const string authorizeRoleValue = "deny";
         public const string accountUnlockMessage = "User account has been locked,are you sure you want to unlock the account?";
         public const string accountUnlockSuccessMessage = "Account has been unlocked for ";

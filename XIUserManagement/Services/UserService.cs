@@ -102,6 +102,11 @@ namespace Interfleet.XIUserManagement.Services
             bool userUpdated = _userRepository.ResetPassword(resetPasswordModel);
             return userUpdated;
         }
+        public bool ChangePassword(ChangePasswordModel changePasswordModel)
+        {
+            bool userUpdated = _userRepository.ChangePassword(changePasswordModel);
+            return userUpdated;
+        }
         public bool DeleteUser(Users user)
         {
             bool userDeleted = _userRepository.Delete(user);

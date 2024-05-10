@@ -66,6 +66,18 @@ namespace Interfleet.XIUserManagement.Repositories
             resetPasswordModel = connection.QueryFirstOrDefault<ResetPasswordModel?>(Constants.QueryConstants.ResetPasswordQuery, new { resetPasswordModel.UserId, resetPasswordModel.PasswordHash, resetPasswordModel.PasswordSalt });
             return true;
         }
+        public bool ChangePassword(ChangePasswordModel? changePasswordModel)
+        {
+            using var connection = _context.CreateConnection();
+            if (changePasswordModel != null)
+            {
+                changePasswordModel.PasswordSalt = _userInfo.GenerateSalt();
+                changePasswordModel.PasswordHash = _userInfo.HashPassword(changePasswordModel.NewPassword, changePasswordModel.PasswordSalt);
+                changePasswordModel.NewPassword = string.Empty;
+            }
+            changePasswordModel = connection.QueryFirstOrDefault<ChangePasswordModel?>(Constants.QueryConstants.ResetPasswordQuery, new { changePasswordModel.UserId, changePasswordModel.PasswordHash, changePasswordModel.PasswordSalt });
+            return true;
+        }
 
         public bool Delete(Users? user)
         {

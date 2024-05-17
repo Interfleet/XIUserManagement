@@ -24,7 +24,7 @@ namespace Interfleet.XIUserManagement.Controllers
         }
         public IActionResult ChangePassword(string userName)
         {
-           _ = new Users();
+            _ = new Users();
             Users? user = _userService.GetUserByUserName(userName);
             ChangePasswordModel? changePasswordModel = user !=null ? new() : null;
             try
@@ -58,7 +58,7 @@ namespace Interfleet.XIUserManagement.Controllers
                 {
                     return View("ChangePassword", changePasswordModel);
                 }
-                if (changePasswordModel != null && _authenticationService.VerifyPassword(changePasswordModel.CurrentPassword, user.PasswordSalt, user))
+                if (changePasswordModel != null)
                 {
                     bool result = _userService.ChangePassword(changePasswordModel);
                     changePasswordModel.SuccessMessage = UserMessageConstants.passwordChangedMessage;
@@ -69,8 +69,6 @@ namespace Interfleet.XIUserManagement.Controllers
                     changePasswordModel.ErrorMessage = UserMessageConstants.invalidPwdMessage;
                     return View("ChangePassword", changePasswordModel);
                 }
-
-                return View("ChangePassword", changePasswordModel);
             }
             catch (Exception ex)
             {

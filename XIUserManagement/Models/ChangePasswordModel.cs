@@ -10,8 +10,8 @@ namespace Interfleet.XIUserManagement.Models
         public string ErrorMessage = "";
         [Required]
         public int UserId { get; set; }
-        [Required, DataType(DataType.Password)]
-        public string? CurrentPassword { get; set; }
+        //[Required, DataType(DataType.Password)]
+        //public string? CurrentPassword { get; set; }
         [Required, DataType(DataType.Password)]
         [RegularExpression(UserMessageConstants.passwordRegularExpression, ErrorMessage = UserMessageConstants.passwordValidatorMessage)]
         public string? NewPassword { get; set; }

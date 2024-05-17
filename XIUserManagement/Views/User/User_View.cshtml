@@ -45,6 +45,10 @@
     <div class="row-cols-md-5">
         <div>
             <a class="btn btn-user" asp-controller="User" asp-action="Index" role="button">Go back</a>
+            @if (Model.Item1.UserAccountDisabled)
+            {
+                <a class="btn btn-user" asp-controller="User" asp-action="UnlockUser" role="button" onclick="return confirm('@Model.Item1.unlockUserMessage')">Unlock user</a>
+            }
         </div>
         @if (Model != null && Model.Item1.SuccessMessage != null && Model.Item1.SuccessMessage.Length > 0)
         {

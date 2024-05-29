@@ -3,8 +3,8 @@
     public class UserMessageConstants
     {
         public const string passwordComparatorMessage = "Password and confirm password do not match, please try again !";
-        public const string passwordValidatorMessage = "Password must be a minimum of 10 characters and a combination of one uppercase,one lowercase and one digit";
-        public const string passwordRegularExpression = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{10,}$";
+        public const string passwordValidatorMessage = "Password must be a minimum of 10 characters and a maximum of 15 characters with combination of one uppercase,one lowercase and one digit";
+        public const string passwordRegularExpression = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{10,15}$";
         public const string modelInvalidDataMessage = "Model data is invalid!";
         public const string dataNotSavedMessage = "Unable to save user details!";
         public const string dataSavedMessage = "Details saved successfully!";

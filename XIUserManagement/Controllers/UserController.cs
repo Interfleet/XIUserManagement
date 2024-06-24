@@ -64,14 +64,19 @@ namespace Interfleet.XIUserManagement.Controllers
             {
                 Users userInfo = new();
                 _loginViewModel.UserName = HttpContext.Session.GetString(UserMessageConstants.searchValueOption1);
-                ViewData[UserMessageConstants.sortOrderUserNameParam] = string.IsNullOrEmpty(sortOrder) ? UserMessageConstants.sortOrderUserNameDesc : "";
-                ViewData[UserMessageConstants.sortOrderCompanyParam] = sortOrder == UserMessageConstants.sortOrderCompanyAsc ? UserMessageConstants.sortOrderCompanyDesc : UserMessageConstants.sortOrderCompanyAsc;
-                userList = _userService.GetUserData();
-                userList = _userService.SortUserData(sortOrder, userList);
-                SetSearchAndPagination(out bool isAdmin, out List<Users> paginatedUserList, out Users user, userList, 0, searchValue, searchBy, pg, pageSize);
+                if (_loginViewModel.UserName != null)
+                {
+                    ViewData[UserMessageConstants.sortOrderUserNameParam] = string.IsNullOrEmpty(sortOrder) ? UserMessageConstants.sortOrderUserNameDesc : "";
+                    ViewData[UserMessageConstants.sortOrderCompanyParam] = sortOrder == UserMessageConstants.sortOrderCompanyAsc ? UserMessageConstants.sortOrderCompanyDesc : UserMessageConstants.sortOrderCompanyAsc;
+                    userList = _userService.GetUserData();
+                    userList = _userService.SortUserData(sortOrder, userList);
+                    SetSearchAndPagination(out bool isAdmin, out List<Users> paginatedUserList, out Users user, userList, 0, searchValue, searchBy, pg, pageSize);
 
-                var userSearchModel = new Tuple<List<Users>, Search, Pager>(paginatedUserList, ViewBag.Search, ViewBag.SearchPager);
-                return isAdmin ? View(UserMessageConstants.adminIndex, userSearchModel) : View(UserMessageConstants.userIndex, userSearchModel);
+                    var userSearchModel = new Tuple<List<Users>, Search, Pager>(paginatedUserList, ViewBag.Search, ViewBag.SearchPager);
+                    return isAdmin ? View(UserMessageConstants.adminIndex, userSearchModel) : View(UserMessageConstants.userIndex, userSearchModel);
+                }
+                else
+                    return View("../Login/Index", _loginViewModel);
             }
             catch (Exception ex)
             {

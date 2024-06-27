@@ -10,9 +10,13 @@ namespace Interfleet.XIUserManagement.Services
     public class UserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        readonly LoginViewModel _loginViewModel;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserService(IUserRepository userRepository, LoginViewModel loginViewModel, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
+            _loginViewModel = loginViewModel;
+            _httpContextAccessor = httpContextAccessor;
         }
         public List<Users> GetUserData()
         {
@@ -21,14 +25,25 @@ namespace Interfleet.XIUserManagement.Services
         //This method clears user data
         public void ClearUserData(Users user)
         {
-            user.UserName=string.Empty;
+            user.UserName = string.Empty;
             if (user.SuccessMessage.Contains("saved"))
             {
                 user.Password = string.Empty;
                 user.ConfirmPassword = string.Empty;
             }
-            user.Company=string.Empty;
-            user.Comments=string.Empty;
+            user.Company = string.Empty;
+            user.Comments = string.Empty;
+        }
+        public bool ClearUserSession()
+        {
+            var HttpContext = _httpContextAccessor.HttpContext;
+            if (HttpContext != null)
+            {
+                _loginViewModel.UserName = HttpContext.Session.GetString(UserMessageConstants.searchValueOption1);
+            }
+            if (_loginViewModel.UserName == null)
+                return false;
+            return true;
         }
         public List<SelectListItem> GetPageSizes(int selectedPageSize = 5)
         {

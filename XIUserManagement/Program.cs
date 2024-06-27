@@ -18,12 +18,14 @@ builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddSingleton<AuthenticationService>();
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<IAuthorization, Authorization>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromHours(4);
+    options.IdleTimeout = TimeSpan.FromMinutes(15);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
 builder.Services.AddMemoryCache();
 
 

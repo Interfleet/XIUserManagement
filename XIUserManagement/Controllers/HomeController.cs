@@ -1,5 +1,6 @@
 ﻿using Interfleet.XIUserManagement.Constants;
 using Interfleet.XIUserManagement.Models;
+using Interfleet.XIUserManagement.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using XIUserManagement.Models;
@@ -20,7 +21,11 @@ namespace XIUserManagement.Controllers
         public IActionResult Index()
         {
             _users.UserName = HttpContext.Session.GetString(UserMessageConstants.searchValueOption1);
-            return View("Index", _users);
+            if (_users.UserName != null)
+                return View("Index", _users);
+            else
+                return View("../Login/Index", _users);
+            
         }
 
         public IActionResult Privacy()

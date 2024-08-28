@@ -1,77 +1,82 @@
 ﻿@using Interfleet.XIUserManagement.Models
 @using Microsoft.AspNetCore.Http;
-@model Tuple<Users, Search,Pager>
+@model Users
 @{
 }
+<style>
+    .btn-user {
+        color: white;
+        background-color: #0d6efd;
+        border-color: blue;
+    }
+</style>
 <br>
 <h2>New user</h2>
-@if (Model != null && Model.Item1.ErrorMessage != null && Model.Item1.ErrorMessage.Length > 0)
+@if (Model != null && Model.ErrorMessage != null && Model.ErrorMessage.Length > 0)
 {
     <div class="col-lg-12 col-lg-offset-3 text-center" role="alert">
-        <strong>@Model.Item1.ErrorMessage</strong>
+        <strong>@Model.ErrorMessage</strong>
     </div>
 }
 <form method="post">
     <div class="row-mb-3">
         <label class="col-sm-3 col-form-label">UserName</label>
         <div class="col-sm-3">
-            <input type="text" class="form-control" name="username" asp-for="Item1.UserName" value="@Model.Item1.UserName">
-            <span asp-validation-for="Item1.UserName"></span>
+            <input type="text" class="form-control" name="username" asp-for="UserName" value="@Model.UserName">
+            <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
     </div>
     <div class="row-mb-3">
         <label class="col-sm-3 col-form-label">Password</label>
         <div class="col-sm-3">
-            @* @Html.PasswordFor(model => model.Item1.Password, new { @class = "form-control" })
-            <span asp-validation-for="Item1.Password"></span> *@
-            <input type="password" class="form-control" name="password" asp-for="Item1.Password" value="@Model.Item1.Password">
-            <span asp-validation-for="Item1.Password"></span>
+            <input type="password" class="form-control" name="password" asp-for="Password" value="@Model.Password">
+            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
     </div>
     <div class="row-mb-3">
         <label class="col-sm-3 col-form-label">Confirm Password</label>
         <div class="col-sm-3">
-            @* @Html.PasswordFor(model => model.Item1.ConfirmPassword, new { @class = "form-control" })
-            <span asp-validation-for="Item1.ConfirmPassword"></span> *@
-            <input type="password" class="form-control" name="confirmPassword" asp-for="Item1.ConfirmPassword" value="@Model.Item1.ConfirmPassword">
-            <span asp-validation-for="Item1.ConfirmPassword"></span>
+            <input type="password" class="form-control" name="confirmPassword" asp-for="ConfirmPassword" value="@Model.ConfirmPassword">
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
     </div>
     <div class="row-mb-3">
         <label class="col-sm-3 col-form-label">Company</label>
         <div class="col-sm-3">
-            <input type="text" class="form-control" name="company" asp-for="Item1.Company" value="@Model.Item1.Company">
-            <span asp-validation-for="Item1.Company"></span>
+            <input type="text" class="form-control" name="company" asp-for="Company" value="@Model.Company">
+            <span asp-validation-for="Company" class="text-danger"></span>
         </div>
     </div>
     <div class="row-mb-3">
         <label class="col-sm-3 col-form-label">Comments</label>
         <div class="col-sm-3">
-            <input type="text" class="form-control" name="comments" asp-for="Item1.Comments" value="@Model.Item1.Comments">
-            <span asp-validation-for="Item1.Comments"></span>
+            <input type="text" class="form-control" name="comments" asp-for="Comments" value="@Model.Comments">
+            <span asp-validation-for="Comments" class="text-danger"></span>
         </div>
     </div>
     <div class="row-mb-3">
         <label class="col-sm-3 col-form-label">Admin</label>
         <div class="col-sm-3">
-            @Html.CheckBoxFor(model => model.Item1.IsAdmin)
+            @Html.CheckBoxFor(model => model.IsAdmin)
         </div>
     </div>
-    @if (Model.Item1.SuccessMessage.Length > 0)
-    {
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>@Model.Item1.SuccessMessage</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
     <br />
 
     <div class="row-cols-md-5">
         <div>
-            <button asp-action="Create" asp-controller="User" class="btn btn-success" asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize">Submit</button>
-            <a class="btn btn-outline-primary" asp-controller="User" asp-action="index" role="button" asp-route-SearchValue="@Model.Item3.SearchValue" asp-route-SearchBy="@Model.Item3.SearchBy" asp-route-pageSize="@Model.Item3.PageSize">Cancel</a>
+            <input type="submit" value="Submit" asp-action="Create" asp-controller="User" class="btn btn-user btn"></input>
+            <a class="btn btn-user btn" asp-controller="User" asp-action="index" role="button">Cancel</a>
         </div>
     </div>
+    <br />
+    @if (Model.SuccessMessage.Length > 0)
+    {
+        <div class="success">
+            <strong>@Model.SuccessMessage</strong> &nbsp;&nbsp;
+            <a class="nav1" asp-area="" asp-controller="User" asp-action="Index">Back to user list</a>
+        </div>
+        <br />
+    }
 </form>
 <script>
     function DisableBackButton() {

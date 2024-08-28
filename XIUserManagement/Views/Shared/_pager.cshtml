@@ -1,102 +1,58 @@
 ﻿@using Interfleet.XIUserManagement.Models
-<div class="container btn-group" border-radius: 25px; height:45px;">
-    <div class="col-4 p-0 justify-content-start mt-1">
-        <form asp-controller="@Model.Controller" asp-action="@Model.Action">
-            <span class="btn-group">
-                <table>
-                    <tr>
-                        <td>
-                            <span><b>Serach by:</b></span>
-                            @Html.RadioButton("SearchBy", "UserName", Model.SearchBy == "UserName", new { id = "userName", data_attr = "userName" }) UserName
-                            @Html.RadioButton("SearchBy", "Company", Model.SearchBy == "Company", new { id = "company", data_attr = "company" }) Company
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text" class="form-control" name="searchValue" placeholder="Enter search value" value="@Model.SearchValue">
-                        </td>
-                        <td>
-                            &nbsp;
-                        </td>
-                        <td>
-                            <input class="btn btn-primary" type="submit" value="Search" />
-                            <input class="btn btn-primary" type="submit" asp-controller="User" asp-action="Clear" value="Clear" />
-                        </td>
-                    </tr>
-                </table>
-
-                <input name="pageSize" type="hidden" value="@Model.PageSize" />
-            </span>
-        </form>
-    </div>
-
-    <div class="col-5 btn-group container mt-1 justify-content-end">
-        <table>
-            <tr>
-                <td>
-                    <span><b>Rows Per Page</b></span>
-
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="form-control" id="pageSelector" asp-items="@ViewBag.PageSizes"
-                            onchange="ChangePageSize(this,'@Model.SearchValue','@Model.SearchBy');">
-                    </select>
-                </td>
-
-            </tr>
-        </table>
-
-        <input name="pageSize" type="hidden" value="@Model.PageSize" />
-    </div>
-    <div class="col-4 p-0 justify-content-end mt-1">
-        <table>
-            <tr>
-                <b>Pages</b>
-            </tr>
-            @if (Model.TotalPages > 0)
+<table>
+    <tr>
+        <b>Pages</b>
+    </tr>
+    @if (Model.TotalPages > 0)
+    {
+        <tr>
+            @if (Model.CurrentPage > 1)
             {
-                <tr>
-                    @if (Model.CurrentPage > 1)
-                    {
-                        <td class="page-item">
-                            <a class="page-link" asp-controller="@Model.Controller" asp-action="@Model.Action" asp-route-pg="1"
-                               asp-route-SearchValue="@Model.SearchValue" asp-route-SearchBy="@Model.SearchBy" asp-route-pageSize="@Model.PageSize">First</a>
-                        </td>
-                        <td>
-                            <a class="page-link" asp-controller="@Model.Controller" asp-action="@Model.Action"
-                               asp-route-pg="@(Model.CurrentPage - 1)"
-                               asp-route-SearchValue="@Model.SearchValue" asp-route-SearchBy="@Model.SearchBy" asp-route-pageSize="@Model.PageSize">Previous</a>
-                        </td>
-                    }
-                    @for (var pge = Model.StartPage; pge <= Model.EndPage; pge++)
-                    {
-                        <td>
-                        <td class="page-item @(pge == Model.CurrentPage ? "active" : "")">
-                            <a class="page-link" asp-controller="@Model.Controller" asp-action="@Model.Action" asp-route-pg="@pge"
-                               asp-route-SearchValue="@Model.SearchValue" asp-route-SearchBy="@Model.SearchBy" asp-route-pageSize="@Model.PageSize"> @pge </a>
-                        </td></td>
-
-                    }
-                    @if (Model.CurrentPage < Model.TotalPages)
-                    {
-                        <td class="page-item">
-                            <a class="page-link" asp-controller="@Model.Controller" asp-action="@Model.Action"
-                               asp-route-SearchValue="@Model.SearchValue" asp-route-SearchBy="@Model.SearchBy" asp-route-pg="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
-                        </td>
-                        <td>
-                            <a class="page-link" asp-controller="@Model.Controller" asp-action="@Model.Action"
-                               asp-route-SearchValue="@Model.SearchValue" asp-route-SearchBy="@Model.SearchBy" asp-route-pg="@(Model.TotalPages)" asp-route-pageSize="@Model.PageSize">Last</a>
-                        </td>
-                    }
-                </tr>
+                <td class="page-item">
+                    <a class="page-link" asp-controller="@Model.Controller" asp-action="@Model.Action" asp-route-pg="1"
+                       asp-route-SearchValue="@Model.SearchValue" asp-route-SearchBy="@Model.SearchBy" asp-route-pageSize="@Model.PageSize">First</a>
+                </td>
+                <td>
+                    <a class="page-link" asp-controller="@Model.Controller" asp-action="@Model.Action"
+                       asp-route-pg="@(Model.CurrentPage - 1)"
+                       asp-route-SearchValue="@Model.SearchValue" asp-route-SearchBy="@Model.SearchBy" asp-route-pageSize="@Model.PageSize">Previous</a>
+                </td>
             }
-        </table>
+            @for (var pge = Model.StartPage; pge <= Model.EndPage; pge++)
+            {
+                <td>
+                <td class="page-item @(pge == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-controller="@Model.Controller" asp-action="@Model.Action" asp-route-pg="@pge"
+                       asp-route-SearchValue="@Model.SearchValue" asp-route-SearchBy="@Model.SearchBy" asp-route-pageSize="@Model.PageSize"> @pge </a>
+                </td></td>
 
-        <input name="pageSize" type="hidden" value="@Model.PageSize" />
-    </div>
-</div>
+            }
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <td class="page-item">
+                    <a class="page-link" asp-controller="@Model.Controller" asp-action="@Model.Action"
+                       asp-route-SearchValue="@Model.SearchValue" asp-route-SearchBy="@Model.SearchBy" asp-route-pg="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                </td>
+                <td>
+                    <a class="page-link" asp-controller="@Model.Controller" asp-action="@Model.Action"
+                       asp-route-SearchValue="@Model.SearchValue" asp-route-SearchBy="@Model.SearchBy" asp-route-pg="@(Model.TotalPages)" asp-route-pageSize="@Model.PageSize">Last</a>
+                </td>
+            }
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>
+                <span><b>Rows Per Page</b></span>
+
+            </td>
+            <td>
+                <select class="form-control" id="pageSelector" asp-items="@ViewBag.PageSizes"
+                        onchange="ChangePageSize(this,'@Model.SearchValue','@Model.SearchBy');">
+                </select>
+            </td>
+        </tr>
+    }
+</table>
+
+<input name="pageSize" type="hidden" value="@Model.PageSize" />
 
 <div class="clearfix">
     <p></p>

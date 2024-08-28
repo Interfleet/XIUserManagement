@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Interfleet.XIUserManagement.Models;
-using Interfleet.XaltAuthenticationAPI.Services;
 using Microsoft.AspNetCore.Authentication;
 using Interfleet.XIUserManagement.Constants;
 using Interfleet.XIUserManagement.Services;
